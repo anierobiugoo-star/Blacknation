@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <script>
+          // JavaScript fundamentals
+
+          // Variables and Data Types
+          var name = "Ugochukwu";
+
+          var name = "Alex";
+
+          let town = "Lagos";
+
+          let gender;
+
+          const validage = 18;
+
+          console.log(name);
+          console.log(name);
+          console.log(gender);
+          console.log(town);
+          console.log(validage);
+
+          // Data types in JavaScript include
+          let name1 = "Ugochukwu"; // String
+
+          let regNumber = 12345; // Number this can also hold an integer or a decimal value.
+
+          let isMarried = false; // Boolean. it can only hold two values true or false.
+
+          let Members = null; // Null is an assignment value. it can be assigned to a variable as a representation of no value.
+
+          let children; // Undefined is a data type that indicates that a variable has not been assigned a value.
+
+          let big_int = 9007199254740991n; // BigInt is a built-in object that provides a way to represent whole numbers larger than 2^53 - 1.
+
+
+          // Non-Primitive Data Types
+
+
+
+          let person = { // Object is a collection of properties, and a property is an association between a name (or key) and a value.
+              name: "Ugochukwu",
+              age: 25,
+              isMarried: false
+          };//this is object which is a key value pair data type.
+
+
+
+
+          let fruits = ['apple','banana','orange']; // Array is a data structure that can hold more than one value at a time. it is an ordered collection of items.
+
+          function greet() {
+              console.log("Hello, welcome to JavaScript!");
+          }
+
+          greet(); // This will call the function and execute the code inside it, printing "Hello, welcome to JavaScript!" to the console.
+
+
+
+          //Operators in JavaScript
+
+          let validAgeNumber = 18;
+
+          // Conditional statement for voting eligibility
+          if (validAgeNumber >= 18) {
+              console.log("You are eligible to vote.");
+          } else {
+              console.log("You are not eligible to vote.");
+          }
+
+
+          let UserAgevalue = 20;
+
+          if(UserAgevalue < 18 && UserAgevalue > 16) {
+              console.log("You are free to go to amusement park");
+
+          }else if(UserAgevalue >= 18 && UserAgevalue < 60) {
+              console.log("You are free to go to work");
+
+          }else {
+
+              console.log("You are free to go to retirement home");
+          };
+
+          let grade = "A"
+
+          switch (grade) {
+              case 'A':
+                  console.log("Excellent");
+                  break;
+              case 'B':
+                  console.log("Good job!");
+                  break;
+              case 'C':
+                  console.log("Well done!");
+                  break;
+              case 'D':
+                  console.log("You passed");
+                  break;
+              case 'F':
+                  console.log("Better luck next time");
+                  break;
+              default:
+                  console.log("Invalid grade");
+          }
+
+          // Ternary operator
+          let ageNumber = 20;
+
+          let voteEligibility = (ageNumber >= 18) ? "You are eligible to vote." : "You are not eligible to vote.";
+          console.log(voteEligibility);
+
+          // Nested if statement
+
+          let Breadname = "Ruth"
+
+          if(Breadname === "Ruth") {
+
+          let BreadFreshness = true;
+          if(BreadFreshness === true) {
+              console.log("The bread is fresh and ready to eat.");
+          } else {
+              console.log("The bread is not fresh and may not be safe to eat.");
+          }
+      }else {
+          console.log("The bread is not Ruth, it may be different type of bread bread.");
+      }
+
+          //Data conversion in JavaScript
+
+          let a = "10";
+          let b = 5;
+          console.log(a + b); // This will concatenate the string and the number, resulting in "105"(string concatenation)
+          console.log(a - b); // This will convert the string to a number and perform subtraction, resulting in 5
+          console.log(a * b); // This will convert the string to a number and perform multiplication, resulting in 50
+          console.log(a / b); // This will convert the string to a number and perform division, resulting in 2
+          console.log();
+
+
+          // Looping statements in JavaScript
+          // For loop
+          for (let x = 0; x <10; x++) {
+              console.log(x);
+          }
+
+          for(let x =1; x <= 50; x++) {
+            if(x % 2 === 0) {
+                console.log(x + " is an even number.");
+            } else {
+                console.log(x + " is an odd number.");
+            }
+          }
+        //   Times tale excercise
+        for (let x = 1; x <= 12; x++)
+        {
+            console.log(x + " X " + 5 + " = " + (x * 5));
+        }
+        //   While loop
+        let y = 10;
+        while (y > 0 ) {
+            console.log(y);
+            y--;
+        }
+
+        // Times tale excercise using while loop
+        let z = 1;
+        while (z <= 12) {
+            console.log(z + " X " + 5 + " = " + (z * 5));
+            z++;
+        }
+
+        // Do while loop
+        let d = 0;
+        do {
+            console.log(d);
+            d++;
+        } while (d < 10);
+
+        // example  of do while loop
+        let knock = 0;
+        let LucyFriendavailable = false;
+
+        do{
+            console.log("Knock knock");
+            knock++;
+        } while (knock < 3 && !LucyFriendavailable);
+
+        // For....of loop
+        let colors = ['red', 'green', 'blue'];
+
+        console.log(colors[0]); // Output: red
+        console.log(colors[1]); // Output: green
+        console.log(colors[2]); // Output: blue/.
+        for (let color of colors) {
+            console.log(color);
+        }
+
+        // For....In loop
+
+        const carbrands = {
+            brand1: "Toyota",
+            brand2: "Honda",
+            brand3: "Ford",
+        };
+
+        for (let brand in carbrands) {
+            console.log(brand + ": " + carbrands[brand]);
+        }
+
+        // function IN JavaScript
+
+        function greet(name) {
+            console.log("Hello, " + name + "!");
+        }
+
+        greet("Ugochukwu"); // This will call the function and print "Hello, Ugochukwu!" to the console.
+
+        
+
+
+
+
+
+
+
+
+
+    
+        // arrays push
+    </script>
+
+    <script src="js/javascript.js"></script> -->
+
+
+ <!-- DOM Manipulation -->
+
+ <!--Selection of elements by their ID, class, or tag name using JavaScript. -->
+ 
+ <!-- By Id-->
+
+ <h1 id="header">Hello, welcome to JavaScrip!</h1>
+
+ <!--By class -->
+ <p class="items">This is a paragraph</p>
+ <p class="items">This is a paragraph</p>
+ <p class="items">This is a paragraph</p>
+ <p class="items">This is a paragraph</p>
+
+    <script>
+    </script>
+
+
+    <script src="js/javascript.js"></script>
+
+
+  </body>
+</html>

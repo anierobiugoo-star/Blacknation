@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOM Mastery — JavaScript Teaching Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --card: #16161f;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f5;
+    --muted: #8888a0;
+    --accent: #c0392b;
+    --accent2: #e74c3c;
+    --green: #27ae60;
+    --amber: #f39c12;
+    --blue: #2980b9;
+    --purple: #8e44ad;
+    --font: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ===== NAVBAR ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent2);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px; left: 0; right: 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    z-index: 999;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+
+  .mobile-menu a:hover { color: var(--accent2); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.3);
+    color: var(--accent2);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent2);
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border2);
+  }
+
+  .btn-outline:hover { background: var(--bg3); }
+
+  /* ===== SECTIONS ===== */
+  section {
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 560px;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  /* ===== TOPICS GRID ===== */
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .topic-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .topic-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+  .topic-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .topic-card h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .topic-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ===== DOM DEMOS ===== */
+  .demos-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .demo-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .demo-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .demo-header h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .demo-tag {
+    font-size: 0.72rem;
+    background: rgba(192,57,43,0.15);
+    color: var(--accent2);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  .demo-body { padding: 1.25rem; }
+
+  .demo-output {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    min-height: 48px;
+    color: var(--green);
+    line-height: 1.5;
+  }
+
+  .demo-input-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .demo-input {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: var(--font);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .demo-input:focus { border-color: var(--accent); }
+
+  .demo-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .demo-btn:hover { background: var(--accent2); }
+
+  .demo-btn.green { background: var(--green); }
+  .demo-btn.green:hover { background: #2ecc71; }
+  .demo-btn.blue { background: var(--blue); }
+  .demo-btn.blue:hover { background: #3498db; }
+
+  /* Color changer */
+  .color-box {
+    height: 80px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    transition: background 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+
+  .color-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .color-swatch:hover { transform: scale(1.15); border-color: rgba(255,255,255,0.4); }
+
+  /* List builder */
+  .list-container {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    min-height: 80px;
+    margin-top: 0.75rem;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .list-item button {
+    background: none;
+    border: none;
+    color: var(--accent2);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .list-item button:hover { background: rgba(192,57,43,0.15); }
+
+  /* Toggle */
+  .toggle-demo-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s;
+  }
+
+  .toggle-demo-box.dark-mode {
+    background: #000;
+    border-color: #444;
+    color: #fff;
+  }
+
+  .toggle-demo-box.highlight {
+    background: rgba(192,57,43,0.1);
+    border-color: var(--accent);
+  }
+
+  /* ===== POS SECTION ===== */
+  .pos-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .pos-machine {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .pos-top {
+    background: var(--accent);
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .pos-top h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+
+  .pos-top p { font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+  .pos-screen {
+    background: #0d1117;
+    border: 2px solid #1f2937;
+    border-radius: var(--radius-sm);
+    margin: 1.25rem;
+    padding: 1rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    min-height: 100px;
+    color: #4ade80;
+  }
+
+  .pos-screen .line { margin-bottom: 4px; }
+  .pos-screen .line.muted { color: #6b7280; }
+  .pos-screen .line.error { color: #ef4444; }
+  .pos-screen .line.success { color: #4ade80; }
+  .pos-screen .line.warning { color: #f59e0b; }
+
+  .pos-body { padding: 0 1.25rem 1.25rem; }
+
+  .pos-field {
+    margin-bottom: 1rem;
+  }
+
+  .pos-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .pos-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: var(--mono);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .pos-input:focus { border-color: var(--accent); }
+
+  .pos-balance-display {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pos-balance-display span:first-child {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .pos-balance-display span:last-child {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: var(--mono);
+    color: var(--green);
+  }
+
+  .pos-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font);
+    letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .pos-btn:hover { background: var(--accent2); }
+  .pos-btn:active { transform: scale(0.98); }
+
+  .pos-reset {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: var(--font);
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  .pos-reset:hover { color: var(--text); border-color: var(--border2); }
+
+  /* Code panel */
+  .code-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .code-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.red { background: #ff5f57; }
+  .dot.yellow { background: #febc2e; }
+  .dot.green { background: #28c840; }
+
+  .code-file {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-left: 8px;
+    font-family: var(--mono);
+  }
+
+  .code-content {
+    padding: 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+
+  .c-kw { color: #c792ea; }
+  .c-fn { color: #82aaff; }
+  .c-str { color: #c3e88d; }
+  .c-num { color: #f78c6c; }
+  .c-cmt { color: #546e7a; font-style: italic; }
+  .c-var { color: #eeffff; }
+  .c-op { color: #89ddff; }
+
+  /* ===== CONCEPTS TIMELINE ===== */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2rem;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  .timeline-item h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .timeline-item p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  footer strong { color: var(--accent2); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .demos-wrapper { grid-template-columns: 1fr; }
+    .pos-wrapper { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2rem; }
+    section { padding: 3.5rem 1.25rem; }
+  }
+
+  @media (max-width: 480px) {
+    nav { padding: 0 1.25rem; }
+    .mobile-menu { padding: 1.25rem; }
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav>
+  <div class="nav-logo">DOM<span>Mastery</span></div>
+  <ul class="nav-links">
+    <li><a href="#topics">Topics</a></li>
+    <li><a href="#demos">DOM Demos</a></li>
+    <li><a href="#pos">POS Machine</a></li>
+    <li><a href="#concepts">Concepts</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- ===== MOBILE MENU ===== -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#topics" onclick="closeMenu()">Topics</a>
+  <a href="#demos" onclick="closeMenu()">DOM Demos</a>
+  <a href="#pos" onclick="closeMenu()">POS Machine</a>
+  <a href="#concepts" onclick="closeMenu()">Concepts</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div>
+    <div class="hero-badge">JavaScript DOM Manipulation</div>
+    <h1>Control the<br><em>Browser</em> with Code</h1>
+    <p>Learn how JavaScript reads, changes, and responds to your HTML page — through real interactive examples you can touch and break.</p>
+    <div class="hero-btns">
+      <a href="#demos" class="btn btn-primary">Try DOM Demos</a>
+      <a href="#pos" class="btn btn-outline">Open POS Machine</a>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== TOPICS ===== -->
+<section id="topics">
+  <div class="section-label">What You Will Learn</div>
+  <h2 class="section-title">Every DOM concept, hands-on</h2>
+  <p class="section-subtitle">This page teaches every major DOM concept with live demos — not just theory. Click things, break things, see what happens.</p>
+
+  <div class="topics-grid">
+    <div class="topic-card">
+      <div class="topic-icon" style="background: rgba(192,57,43,0.15);">🎯</div>
+      <h3>Selecting Elements</h3>
+      <p>getElementById, querySelector, querySelectorAll — how to grab any element on the page.</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon" style="background: rgba(39,174,96,0.15);">✏️</div>
+      <h3>Changing Content</h3>
+      <p>innerHTML vs textContent — update what's displayed on the page dynamically.</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon" style="background: rgba(41,128,185,0.15);">🎨</div>
+      <h3>Changing Styles</h3>
+      <p>Modify CSS properties directly from JavaScript — colors, sizes, visibility and more.</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon" style="background: rgba(142,68,173,0.15);">🏷️</div>
+      <h3>classList</h3>
+      <p>add, remove, toggle, contains — manage CSS classes cleanly without touching inline styles.</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon" style="background: rgba(243,156,18,0.15);">➕</div>
+      <h3>Creating Elements</h3>
+      <p>createElement and appendChild — build new HTML elements from scratch with JavaScript.</p>
+    </div>
+    <div class="topic-card">
+      <div class="topic-icon" style="background: rgba(192,57,43,0.15);">👂</div>
+      <h3>Events</h3>
+      <p>addEventListener — listen for clicks, typing, hovering and respond to user actions.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== DOM DEMOS ===== -->
+<section id="demos">
+  <div class="section-label">Interactive Demos</div>
+  <h2 class="section-title">Touch it. Break it. Learn it.</h2>
+  <p class="section-subtitle">Every demo below runs real JavaScript DOM code. Interact with them to see exactly what each concept does.</p>
+
+  <div class="demos-wrapper">
+
+    <!-- Demo 1: textContent -->
+    <div class="demo-card">
+      <div class="demo-header">
+        <h3>Changing Text Content</h3>
+        <span class="demo-tag">textContent</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">Type something and watch the heading change in real time.</p>
+        <div class="demo-input-row">
+          <input class="demo-input" id="textInput" type="text" placeholder="Type your name...">
+        </div>
+        <div id="textTarget" style="font-size:1.3rem; font-weight:700; min-height:40px; padding:10px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+          Hello, World!
+        </div>
+        <div class="demo-output" id="textCode">document.querySelector('#heading')<br>.textContent = "Hello, World!"</div>
+      </div>
+    </div>
+
+    <!-- Demo 2: Style changer -->
+    <div class="demo-card">
+      <div class="demo-header">
+        <h3>Changing Styles</h3>
+        <span class="demo-tag">element.style</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">Click a color to change the box's background color.</p>
+        <div class="color-box" id="colorBox">background changes here</div>
+        <div class="color-row">
+          <div class="color-swatch" style="background:#c0392b;" onclick="changeColor('#c0392b', 'crimson')"></div>
+          <div class="color-swatch" style="background:#27ae60;" onclick="changeColor('#27ae60', 'green')"></div>
+          <div class="color-swatch" style="background:#2980b9;" onclick="changeColor('#2980b9', 'blue')"></div>
+          <div class="color-swatch" style="background:#8e44ad;" onclick="changeColor('#8e44ad', 'purple')"></div>
+          <div class="color-swatch" style="background:#f39c12;" onclick="changeColor('#f39c12', 'amber')"></div>
+          <div class="color-swatch" style="background:#1abc9c;" onclick="changeColor('#1abc9c', 'teal')"></div>
+        </div>
+        <div class="demo-output" id="colorCode">box.style.backgroundColor = "crimson"</div>
+      </div>
+    </div>
+
+    <!-- Demo 3: classList toggle -->
+    <div class="demo-card">
+      <div class="demo-header">
+        <h3>classList.toggle()</h3>
+        <span class="demo-tag">classList</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">Toggle classes on and off — the same way dark mode and dropdowns work.</p>
+        <div class="toggle-demo-box" id="toggleBox">
+          <div style="font-size:0.9rem; font-weight:600; margin-bottom:4px;" id="toggleText">Normal mode</div>
+          <div style="font-size:0.78rem; color:var(--muted);">Click buttons to toggle classes</div>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button class="demo-btn" onclick="toggleClass('dark-mode', 'dark mode', 'normal')">Toggle Dark</button>
+          <button class="demo-btn blue" onclick="toggleClass('highlight', 'highlighted', 'normal')">Toggle Highlight</button>
+        </div>
+        <div class="demo-output" id="toggleCode">box.classList.toggle("dark-mode")</div>
+      </div>
+    </div>
+
+    <!-- Demo 4: createElement -->
+    <div class="demo-card">
+      <div class="demo-header">
+        <h3>Creating Elements</h3>
+        <span class="demo-tag">createElement</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">Type a name and add it to the list. Each item is created with JavaScript.</p>
+        <div class="demo-input-row">
+          <input class="demo-input" id="listInput" type="text" placeholder="Student name...">
+          <button class="demo-btn green" onclick="addToList()">Add</button>
+        </div>
+        <div class="list-container" id="listContainer">
+          <div style="font-size:0.8rem; color:var(--muted); text-align:center; padding:1rem;" id="emptyMsg">No students yet. Add one above.</div>
+        </div>
+        <div class="demo-output" id="listCode">let el = document.createElement("div")<br>list.appendChild(el)</div>
+      </div>
+    </div>
+
+    <!-- Demo 5: Event listener -->
+    <div class="demo-card">
+      <div class="demo-header">
+        <h3>Event Listener</h3>
+        <span class="demo-tag">addEventListener</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">Every click, keypress and hover is an event. Watch the event log below.</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+          <button class="demo-btn" id="clickBtn" onclick="logEvent('click', 'button clicked!')">Click Me</button>
+          <input class="demo-input" id="keyInput" placeholder="Type here..." style="flex:1;" onkeyup="logEvent('keyup', 'key pressed: ' + event.key)">
+        </div>
+        <div id="eventHover" style="background:var(--bg3); border:1px dashed var(--border2); border-radius:var(--radius-sm); padding:10px; text-align:center; font-size:0.85rem; color:var(--muted); cursor:default; margin-bottom:0.75rem;">
+          Hover over me
+        </div>
+        <div class="demo-output" id="eventLog" style="max-height:80px; overflow-y:auto;">Waiting for events...</div>
+      </div>
+    </div>
+
+    <!-- Demo 6: innerHTML -->
+    <div class="demo-card">
+      <div class="demo-header">
+        <h3>innerHTML vs textContent</h3>
+        <span class="demo-tag">innerHTML</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">See the difference: innerHTML renders HTML tags, textContent treats them as plain text.</p>
+        <div id="htmlTarget" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; min-height:60px; margin-bottom:0.75rem; font-size:0.9rem;">
+          Click a button below to see the difference.
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="demo-btn" onclick="useInnerHTML()">Use innerHTML</button>
+          <button class="demo-btn blue" onclick="useTextContent()">Use textContent</button>
+        </div>
+        <div class="demo-output" id="htmlCode">Click a button above</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== POS MACHINE ===== -->
+<section id="pos">
+  <div class="section-label">Real World Project</div>
+  <h2 class="section-title">POS Machine — DOM + Callbacks</h2>
+  <p class="section-subtitle">Everything comes together here — DOM selection, events, callbacks, global variables, and conditional logic. This is your callback assignment, now alive in the browser.</p>
+
+  <div class="pos-wrapper">
+
+    <!-- POS UI -->
+    <div class="pos-machine">
+      <div class="pos-top">
+        <h3>⬛ FIRST BANK POS</h3>
+        <p>Insert card to begin transaction</p>
+      </div>
+
+      <div class="pos-screen" id="posScreen">
+        <div class="line muted">FIRST BANK OF NIGERIA PLC</div>
+        <div class="line muted">--------------------------------</div>
+        <div class="line" id="posLine1">Ready. Enter PIN and amount.</div>
+        <div class="line" id="posLine2"></div>
+        <div class="line" id="posLine3"></div>
+      </div>
+
+      <div class="pos-body">
+        <div class="pos-balance-display">
+          <span>Account Balance</span>
+          <span id="balanceDisplay">₦20,000.00</span>
+        </div>
+
+        <div class="pos-field">
+          <label class="pos-label" for="pinInput">Enter PIN</label>
+          <input class="pos-input" id="pinInput" type="password" maxlength="4" placeholder="****">
+        </div>
+
+        <div class="pos-field">
+          <label class="pos-label" for="amountInput">Withdrawal Amount (₦)</label>
+          <input class="pos-input" id="amountInput" type="number" placeholder="e.g. 5000" min="0">
+        </div>
+
+        <button class="pos-btn" onclick="processTransaction()">WITHDRAW</button>
+        <button class="pos-reset" onclick="resetPOS()">Reset POS</button>
+      </div>
+    </div>
+
+    <!-- Code Panel -->
+    <div>
+      <div class="code-panel">
+        <div class="code-panel-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <span class="code-file">pos.js</span>
+        </div>
+        <div class="code-content">
+<span class="c-cmt">// Global variable — lives in the system</span><br>
+<span class="c-kw">let</span> <span class="c-var">accountBalance</span> <span class="c-op">=</span> <span class="c-num">20000</span>;<br>
+<br>
+<span class="c-cmt">// Main function — takes a callback</span><br>
+<span class="c-kw">function</span> <span class="c-fn">checkAccount</span>(<span class="c-var">pin</span>, <span class="c-var">amount</span>, <span class="c-var">callback</span>) {<br>
+&nbsp;&nbsp;<span class="c-kw">if</span> (<span class="c-var">pin</span> <span class="c-op">!==</span> <span class="c-num">1234</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">callback</span>(<span class="c-str">"error"</span>, <span class="c-str">"Incorrect PIN"</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-kw">return</span>;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="c-kw">if</span> (<span class="c-var">amount</span> <span class="c-op">&lt;=</span> <span class="c-var">accountBalance</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-var">accountBalance</span> <span class="c-op">-=</span> <span class="c-var">amount</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">callback</span>(<span class="c-str">"success"</span>, <span class="c-var">amount</span>);<br>
+&nbsp;&nbsp;} <span class="c-kw">else</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-fn">callback</span>(<span class="c-str">"failure"</span>, <span class="c-str">"Insufficient funds"</span>);<br>
+&nbsp;&nbsp;}<br>
+}<br>
+<br>
+<span class="c-cmt">// Callback — handles the result</span><br>
+<span class="c-kw">function</span> <span class="c-fn">transactionResult</span>(<span class="c-var">status</span>, <span class="c-var">data</span>) {<br>
+&nbsp;&nbsp;<span class="c-kw">if</span> (<span class="c-var">status</span> <span class="c-op">===</span> <span class="c-str">"success"</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-cmt">// Update DOM with result</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-var">screen</span>.<span class="c-fn">textContent</span> <span class="c-op">=</span> <span class="c-str">"Withdrawal complete!"</span>;<br>
+&nbsp;&nbsp;}<br>
+}<br>
+<br>
+<span class="c-cmt">// Event listener triggers it all</span><br>
+<span class="c-var">btn</span>.<span class="c-fn">addEventListener</span>(<span class="c-str">"click"</span>, <span class="c-kw">function</span>() {<br>
+&nbsp;&nbsp;<span class="c-fn">checkAccount</span>(<span class="c-var">pin</span>, <span class="c-var">amount</span>, <span class="c-var">transactionResult</span>);<br>
+});
+        </div>
+      </div>
+
+      <div style="margin-top:1rem; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem;">
+        <div style="font-size:0.82rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.75rem;">Test Scenarios</div>
+        <div style="font-size:0.85rem; line-height:2; color:var(--muted);">
+          ✅ PIN: <strong style="color:var(--text); font-family:var(--mono);">1234</strong> · Amount: <strong style="color:var(--text); font-family:var(--mono);">₦5,000</strong> → Success<br>
+          ❌ PIN: <strong style="color:var(--text); font-family:var(--mono);">9999</strong> · Any amount → Wrong PIN<br>
+          ⚠️ PIN: <strong style="color:var(--text); font-family:var(--mono);">1234</strong> · Amount: <strong style="color:var(--text); font-family:var(--mono);">₦50,000</strong> → Insufficient
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== CONCEPTS TIMELINE ===== -->
+<section id="concepts">
+  <div class="section-label">Learning Path</div>
+  <h2 class="section-title">How everything connects</h2>
+  <p class="section-subtitle">Every concept builds on the last. This is the order that makes sense.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <h3>Functions & Callbacks</h3>
+      <p>Functions are reusable machines. Callbacks are functions passed into other functions to run later — the foundation of everything async.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <h3>Scope & Closures</h3>
+      <p>Scope controls where variables live. Closures let inner functions remember outer variables even after the outer function is gone.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <h3>Arrays & Array Methods</h3>
+      <p>Arrays hold lists. forEach, map, filter and find use callbacks to process every item — connecting directly back to functions.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <h3>Objects</h3>
+      <p>Objects group related data together as key-value pairs. Methods are functions inside objects. this refers to the current object.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--green);"></div>
+      <h3>DOM Manipulation ← You Are Here</h3>
+      <p>The DOM connects JavaScript to the browser. Select elements, change content, respond to events — everything comes alive on the page.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p>Built for <strong>JavaScript students</strong> — learn by doing, not just reading.</p>
+  <p style="margin-top:0.5rem; font-size:0.8rem;">PIN for POS demo is <strong>1234</strong></p>
+</footer>
+
+<script>
+  // ===== HAMBURGER MENU =====
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', function() {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+
+  // Close menu when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  // ===== DEMO 1: textContent =====
+  const textInput = document.getElementById('textInput');
+  const textTarget = document.getElementById('textTarget');
+  const textCode = document.getElementById('textCode');
+
+  textInput.addEventListener('input', function() {
+    let val = textInput.value || 'World';
+    textTarget.textContent = 'Hello, ' + val + '!';
+    textCode.innerHTML = 'heading.textContent = "Hello, ' + val + '!"';
+  });
+
+  // ===== DEMO 2: Style changer =====
+  function changeColor(hex, name) {
+    document.getElementById('colorBox').style.backgroundColor = hex;
+    document.getElementById('colorCode').textContent = 'box.style.backgroundColor = "' + name + '"';
+  }
+
+  // ===== DEMO 3: classList toggle =====
+  function toggleClass(cls, onText, offText) {
+    const box = document.getElementById('toggleBox');
+    const label = document.getElementById('toggleText');
+    box.classList.toggle(cls);
+    const isOn = box.classList.contains(cls);
+    label.textContent = isOn ? onText : offText;
+    document.getElementById('toggleCode').textContent = 'box.classList.toggle("' + cls + '")  → ' + (isOn ? 'added' : 'removed');
+  }
+
+  // ===== DEMO 4: createElement =====
+  let studentCount = 0;
+
+  function addToList() {
+    const input = document.getElementById('listInput');
+    const container = document.getElementById('listContainer');
+    const emptyMsg = document.getElementById('emptyMsg');
+    const name = input.value.trim();
+
+    if (!name) return;
+
+    if (emptyMsg) emptyMsg.remove();
+
+    studentCount++;
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    item.innerHTML = '<span>' + studentCount + '. ' + name + '</span><button onclick="this.parentElement.remove()">✕</button>';
+    container.appendChild(item);
+
+    document.getElementById('listCode').innerHTML = 'let el = document.createElement("div")<br>el.textContent = "' + name + '"<br>list.appendChild(el)';
+    input.value = '';
+    input.focus();
+  }
+
+  document.getElementById('listInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addToList();
+  });
+
+  // ===== DEMO 5: Events =====
+  let eventCount = 0;
+  const eventLog = document.getElementById('eventLog');
+
+  function logEvent(type, msg) {
+    eventCount++;
+    const time = new Date().toLocaleTimeString();
+    eventLog.innerHTML = '<span style="color:var(--accent2);">[' + eventCount + ']</span> <span style="color:var(--muted);">' + time + '</span> → ' + msg + '<br>' + eventLog.innerHTML;
+    document.getElementById('eventLog').scrollTop = 0;
+  }
+
+  document.getElementById('eventHover').addEventListener('mouseover', function() {
+    this.style.borderColor = 'var(--accent)';
+    this.textContent = 'Mouse is over me! 👋';
+    logEvent('mouseover', 'hovered over element');
+  });
+
+  document.getElementById('eventHover').addEventListener('mouseout', function() {
+    this.style.borderColor = 'var(--border2)';
+    this.textContent = 'Hover over me';
+  });
+
+  // ===== DEMO 6: innerHTML vs textContent =====
+  const htmlTarget = document.getElementById('htmlTarget');
+  const htmlCode = document.getElementById('htmlCode');
+
+  function useInnerHTML() {
+    htmlTarget.innerHTML = 'Hello <strong style="color:var(--accent2)">Anthony</strong> — this is <em>rendered HTML</em>!';
+    htmlCode.textContent = 'el.innerHTML = "Hello <strong>Anthony</strong>"  → renders tags';
+  }
+
+  function useTextContent() {
+    htmlTarget.textContent = 'Hello <strong>Anthony</strong> — this is plain text!';
+    htmlCode.textContent = 'el.textContent = "Hello <strong>Anthony</strong>"  → shows tags as text';
+  }
+
+  // ===== POS MACHINE =====
+  let accountBalance = 20000;
+
+  function updateScreen(line1, line2, line3, type1, type2, type3) {
+    const l1 = document.getElementById('posLine1');
+    const l2 = document.getElementById('posLine2');
+    const l3 = document.getElementById('posLine3');
+    l1.textContent = line1 || '';
+    l2.textContent = line2 || '';
+    l3.textContent = line3 || '';
+    l1.className = 'line ' + (type1 || '');
+    l2.className = 'line ' + (type2 || 'muted');
+    l3.className = 'line ' + (type3 || 'muted');
+  }
+
+  function updateBalance() {
+    document.getElementById('balanceDisplay').textContent = '₦' + accountBalance.toLocaleString() + '.00';
+  }
+
+  function transactionResult(status, data) {
+    if (status === 'success') {
+      updateScreen(
+        '✓ Withdrawal complete!',
+        'Amount: ₦' + Number(data).toLocaleString() + '.00',
+        'Balance: ₦' + accountBalance.toLocaleString() + '.00',
+        'success', 'success', 'muted'
+      );
+      updateBalance();
+    } else if (status === 'failure') {
+      updateScreen(
+        '✗ ' + data,
+        'Balance: ₦' + accountBalance.toLocaleString() + '.00',
+        'Try a smaller amount.',
+        'error', 'muted', 'muted'
+      );
+    } else {
+      updateScreen(
+        '✗ ' + data,
+        'Please try again.',
+        '',
+        'error', 'muted', ''
+      );
+    }
+  }
+
+  function checkAccount(pin, amount, callback) {
+    updateScreen('Card inserted...', 'Processing...', 'Please wait.', '', 'muted', 'muted');
+
+    setTimeout(function() {
+      if (pin !== 1234) {
+        callback('error', 'Incorrect PIN. Declined.');
+        return;
+      }
+      if (amount <= 0) {
+        callback('error', 'Enter a valid amount.');
+        return;
+      }
+      if (amount <= accountBalance) {
+        accountBalance -= amount;
+        callback('success', amount);
+      } else {
+        callback('failure', 'Insufficient funds.');
+      }
+    }, 1200);
+  }
+
+  function processTransaction() {
+    const pin = Number(document.getElementById('pinInput').value);
+    const amount = Number(document.getElementById('amountInput').value);
+    checkAccount(pin, amount, transactionResult);
+  }
+
+  function resetPOS() {
+    accountBalance = 20000;
+    updateBalance();
+    document.getElementById('pinInput').value = '';
+    document.getElementById('amountInput').value = '';
+    updateScreen('Ready. Enter PIN and amount.', '', '', '', '', '');
+  }
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

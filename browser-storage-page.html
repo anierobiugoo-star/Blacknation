@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browser Storage — JavaScript Teaching Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07080f;
+    --bg2: #0d0e1a;
+    --bg3: #13152a;
+    --card: #0f1120;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #eeeef5;
+    --muted: #7070a0;
+    --local: #f0a500;
+    --local-dim: rgba(240,165,0,0.12);
+    --local-border: rgba(240,165,0,0.25);
+    --session: #3b8cf0;
+    --session-dim: rgba(59,140,240,0.12);
+    --session-border: rgba(59,140,240,0.25);
+    --green: #2ecc71;
+    --green-dim: rgba(46,204,113,0.12);
+    --red: #e74c3c;
+    --font: 'Space Grotesk', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    background: rgba(7,8,15,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-local { color: var(--local); }
+  .logo-sep { color: var(--muted); font-weight: 400; }
+  .logo-session { color: var(--session); }
+
+  .nav-links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 62px; left: 0; right: 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 99;
+  }
+
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { color: var(--text); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  .glow-gold {
+    width: 500px; height: 500px;
+    background: rgba(240,165,0,0.07);
+    top: -100px; left: -100px;
+  }
+
+  .glow-blue {
+    width: 400px; height: 400px;
+    background: rgba(59,140,240,0.07);
+    bottom: -50px; right: -50px;
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--local);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 .local { color: var(--local); }
+  .hero h1 .session { color: var(--session); }
+
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.75;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 11px 24px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    font-family: var(--font);
+  }
+
+  .btn-gold { background: var(--local); color: #000; }
+  .btn-gold:hover { background: #ffb800; transform: translateY(-1px); }
+  .btn-blue { background: var(--session); color: #fff; }
+  .btn-blue:hover { background: #5aa3ff; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border2); }
+  .btn-ghost:hover { background: var(--bg3); }
+
+  /* ===== COMPARE STRIP ===== */
+  .compare-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-cell {
+    padding: 2rem;
+    background: var(--bg);
+  }
+
+  .compare-cell.gold { border-top: 3px solid var(--local); }
+  .compare-cell.blue { border-top: 3px solid var(--session); }
+
+  .compare-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .compare-label.gold { color: var(--local); }
+  .compare-label.blue { color: var(--session); }
+
+  .compare-cell h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .compare-cell p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    padding: 5rem 2rem;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-eyebrow.gold { color: var(--local); }
+  .section-eyebrow.blue { color: var(--session); }
+  .section-eyebrow.green { color: var(--green); }
+
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 540px;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== CONCEPT CARDS ===== */
+  .concepts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .concept-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .concept-card:hover { transform: translateY(-2px); border-color: var(--border2); }
+  .concept-card.gold { border-top: 2px solid var(--local); }
+  .concept-card.blue { border-top: 2px solid var(--session); }
+
+  .concept-card h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    font-family: var(--mono);
+  }
+
+  .concept-card h4.gold { color: var(--local); }
+  .concept-card h4.blue { color: var(--session); }
+
+  .concept-card p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ===== DEMO LAYOUT ===== */
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .demo-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .demo-head {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .demo-head h3 { font-size: 0.88rem; font-weight: 600; }
+
+  .demo-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-family: var(--mono);
+  }
+
+  .demo-tag.gold { background: var(--local-dim); color: var(--local); border: 1px solid var(--local-border); }
+  .demo-tag.blue { background: var(--session-dim); color: var(--session); border: 1px solid var(--session-border); }
+  .demo-tag.green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(46,204,113,0.25); }
+
+  .demo-body { padding: 1.25rem; }
+
+  .field-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .field-row input, .demo-input {
+    flex: 1;
+    background: var(--bg3);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    color: var(--text);
+    font-size: 0.88rem;
+    font-family: var(--font);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .field-row input:focus, .demo-input:focus { border-color: var(--local); }
+
+  .action-btn {
+    padding: 9px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .action-btn.gold { background: var(--local); color: #000; }
+  .action-btn.gold:hover { background: #ffb800; }
+  .action-btn.blue { background: var(--session); color: #fff; }
+  .action-btn.blue:hover { background: #5aa3ff; }
+  .action-btn.red { background: var(--red); color: #fff; }
+  .action-btn.red:hover { background: #ff5a4a; }
+  .action-btn.ghost { background: var(--bg3); color: var(--muted); border: 1px solid var(--border); }
+  .action-btn.ghost:hover { color: var(--text); }
+  .action-btn.green { background: var(--green); color: #000; }
+  .action-btn.green:hover { background: #3de08a; }
+
+  .storage-display {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    min-height: 60px;
+    margin-top: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .storage-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-radius: 5px;
+    margin-bottom: 4px;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .storage-row.gold-row { background: var(--local-dim); border: 1px solid var(--local-border); }
+  .storage-row.blue-row { background: var(--session-dim); border: 1px solid var(--session-border); }
+
+  .storage-key { color: var(--local); }
+  .storage-key.blue { color: var(--session); }
+  .storage-val { color: var(--text); flex: 1; padding: 0 0.75rem; word-break: break-all; }
+  .storage-del { color: var(--red); cursor: pointer; background: none; border: none; font-size: 0.85rem; padding: 2px 6px; border-radius: 4px; transition: background 0.2s; }
+  .storage-del:hover { background: rgba(231,76,60,0.15); }
+
+  .empty-state {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 0.75rem;
+  }
+
+  .output-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+    min-height: 44px;
+    line-height: 1.6;
+    color: var(--green);
+  }
+
+  .output-box.error { color: var(--red); }
+  .output-box.warn { color: var(--local); }
+
+  /* ===== KEKE TRACKER ===== */
+  .tracker-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .tracker-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--local);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .tracker-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tracker-total {
+    background: var(--local-dim);
+    border: 1px solid var(--local-border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .tracker-total .amount {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--local);
+    font-family: var(--mono);
+  }
+
+  .tracker-total .label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .earnings-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .earning-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .earning-row:last-child { border-bottom: none; }
+  .earning-date { color: var(--muted); font-size: 0.78rem; }
+  .earning-amount { color: var(--local); font-weight: 600; font-family: var(--mono); }
+
+  /* ===== SESSION DEMO ===== */
+  .session-demo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--session);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .session-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--session-dim);
+    border: 1px solid var(--session-border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .session-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--session);
+    animation: pulse 1.5s infinite;
+  }
+
+  /* ===== THEME DEMO ===== */
+  .theme-demo-box {
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    margin-bottom: 0.75rem;
+    background: var(--bg3);
+  }
+
+  .theme-demo-box.light-theme {
+    background: #f5f5f0;
+    border-color: #ddd;
+    color: #111;
+  }
+
+  .theme-demo-box h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+  .theme-demo-box p { font-size: 0.8rem; opacity: 0.7; }
+
+  /* ===== JSON DEMO ===== */
+  .json-demo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .json-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .json-tab {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-family: var(--font);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .json-tab.active { color: var(--local); border-bottom-color: var(--local); }
+
+  .json-panel {
+    padding: 1.25rem;
+    display: none;
+  }
+
+  .json-panel.active { display: block; }
+
+  .code-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.75;
+    overflow-x: auto;
+    margin-bottom: 0.75rem;
+  }
+
+  .c-kw { color: #c792ea; }
+  .c-fn { color: #82aaff; }
+  .c-str { color: #c3e88d; }
+  .c-num { color: #f78c6c; }
+  .c-cmt { color: #546e7a; font-style: italic; }
+  .c-var { color: #eeffff; }
+  .c-op { color: #89ddff; }
+  .c-key { color: var(--local); }
+
+  /* ===== RULES SECTION ===== */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .rule-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .rule-number {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: var(--mono);
+    margin-bottom: 0.75rem;
+    opacity: 0.3;
+  }
+
+  .rule-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .rule-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.65; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.83rem;
+  }
+
+  footer strong { color: var(--local); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .compare-strip { grid-template-columns: 1fr; }
+    .demo-grid { grid-template-columns: 1fr; }
+    .tracker-layout { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2.2rem; }
+    .section { padding: 3.5rem 1.25rem; }
+    nav { padding: 0 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="logo-local">local</span>
+    <span class="logo-sep">/</span>
+    <span class="logo-session">session</span>
+    <span style="color:var(--muted); font-weight:400;">Storage</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#concepts">Concepts</a></li>
+    <li><a href="#localStorage">localStorage</a></li>
+    <li><a href="#json">JSON</a></li>
+    <li><a href="#sessionStorage">sessionStorage</a></li>
+    <li><a href="#projects">Projects</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#concepts" onclick="closeMenu()">Concepts</a>
+  <a href="#localStorage" onclick="closeMenu()">localStorage</a>
+  <a href="#json" onclick="closeMenu()">JSON</a>
+  <a href="#sessionStorage" onclick="closeMenu()">sessionStorage</a>
+  <a href="#projects" onclick="closeMenu()">Projects</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow glow-gold"></div>
+  <div class="hero-glow glow-blue"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-dot"></div>
+      Browser Storage API
+    </div>
+    <h1>
+      Save data in the<br>
+      <span class="local">browser.</span>
+      <span class="session"> Persist it.</span>
+    </h1>
+    <p>Learn how localStorage and sessionStorage keep your data alive — even after the page refreshes — with live interactive demos you can touch.</p>
+    <div class="hero-btns">
+      <a href="#localStorage" class="btn btn-gold">localStorage Demos</a>
+      <a href="#sessionStorage" class="btn btn-blue">sessionStorage Demos</a>
+      <a href="#projects" class="btn btn-ghost">Real Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE STRIP -->
+<div class="compare-strip">
+  <div class="compare-cell gold">
+    <div class="compare-label gold">localStorage</div>
+    <h3>Permanent Memory</h3>
+    <p>Data stays until you manually delete it. Like writing on a wall with permanent marker — it survives page refreshes, browser restarts, and laptop shutdowns.</p>
+  </div>
+  <div class="compare-cell blue">
+    <div class="compare-label blue">sessionStorage</div>
+    <h3>Temporary Memory</h3>
+    <p>Data lives only while the tab is open. The moment the tab closes — everything is gone. Like notes written on your hand that wash off when you shower.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- CONCEPTS -->
+<section class="section" id="concepts">
+  <div class="section-eyebrow gold">Core API Methods</div>
+  <h2 class="section-title">Every method you need to know</h2>
+  <p class="section-sub">Both localStorage and sessionStorage share the exact same methods. Learn one, you know both.</p>
+
+  <div class="concepts-grid">
+    <div class="concept-card gold">
+      <h4 class="gold">setItem(key, value)</h4>
+      <p>Save data. Always stores as a string. Think of it as writing a label on a locker and putting something inside.</p>
+    </div>
+    <div class="concept-card gold">
+      <h4 class="gold">getItem(key)</h4>
+      <p>Read data. Returns the value or null if not found. Like opening the locker to check what's inside.</p>
+    </div>
+    <div class="concept-card gold">
+      <h4 class="gold">removeItem(key)</h4>
+      <p>Delete one specific item. Everything else stays. Like taking only your documents out of the locker.</p>
+    </div>
+    <div class="concept-card gold">
+      <h4 class="gold">clear()</h4>
+      <p>Delete everything in storage. Nuclear option. Like emptying the entire locker at once.</p>
+    </div>
+    <div class="concept-card blue">
+      <h4 class="blue">JSON.stringify()</h4>
+      <p>Pack an object into a string before saving. You cannot store objects directly — they must be converted first.</p>
+    </div>
+    <div class="concept-card blue">
+      <h4 class="blue">JSON.parse()</h4>
+      <p>Unpack a string back into an object after reading. The reverse of stringify — converts text back to usable data.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- LOCALSTORAGE DEMOS -->
+<section class="section" id="localStorage">
+  <div class="section-eyebrow gold">localStorage</div>
+  <h2 class="section-title">Touch it. Save it. Refresh. It stays.</h2>
+  <p class="section-sub">Every demo below writes to your actual browser localStorage. Open DevTools → Application → localStorage to watch the data appear in real time.</p>
+
+  <div class="demo-grid">
+
+    <!-- Demo 1: setItem / getItem -->
+    <div class="demo-card">
+      <div class="demo-head">
+        <h3>setItem & getItem</h3>
+        <span class="demo-tag gold">localStorage</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Type a key and value — save it, then read it back.</p>
+        <div class="field-row">
+          <input type="text" id="setKey" placeholder="Key e.g. name">
+          <input type="text" id="setValue" placeholder="Value e.g. Anthony" style="flex:1.5">
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="action-btn gold" onclick="demoSetItem()">Save</button>
+          <button class="action-btn ghost" onclick="demoGetItem()">Read</button>
+          <button class="action-btn red" onclick="demoRemoveItem()">Delete</button>
+        </div>
+        <div class="output-box" id="setGetOutput">Enter a key and value above, then click Save.</div>
+      </div>
+    </div>
+
+    <!-- Demo 2: View all storage -->
+    <div class="demo-card">
+      <div class="demo-head">
+        <h3>View All Saved Data</h3>
+        <span class="demo-tag gold">localStorage</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">See everything currently saved in your localStorage.</p>
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+          <button class="action-btn gold" onclick="viewAllStorage()">Refresh View</button>
+          <button class="action-btn red" onclick="clearAllStorage()">Clear All</button>
+        </div>
+        <div class="storage-display" id="allStorageDisplay">
+          <div class="empty-state">Click "Refresh View" to see your saved data.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo 3: Theme preference -->
+    <div class="demo-card">
+      <div class="demo-head">
+        <h3>Remember Theme Preference</h3>
+        <span class="demo-tag gold">real use case</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Toggle the theme below. Refresh the page — your choice is remembered.</p>
+        <div class="theme-demo-box" id="themeDemoBox">
+          <h4 id="themeTitle">🌙 Dark Theme Active</h4>
+          <p id="themeDesc">This preference is saved to localStorage</p>
+        </div>
+        <button class="action-btn gold" id="themeToggleBtn" onclick="toggleThemeDemo()">Switch to Light Theme</button>
+        <div class="output-box" id="themeOutput">localStorage.setItem("demoTheme", "dark")</div>
+      </div>
+    </div>
+
+    <!-- Demo 4: Counter that persists -->
+    <div class="demo-card">
+      <div class="demo-head">
+        <h3>Persistent Counter</h3>
+        <span class="demo-tag gold">persists on refresh</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">This counter saves to localStorage. Refresh the page — it picks up where it left off.</p>
+        <div style="text-align:center;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.5rem;margin-bottom:0.75rem;">
+          <div style="font-size:3rem;font-weight:700;color:var(--local);font-family:var(--mono);" id="counterDisplay">0</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">saved in localStorage</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="action-btn gold" onclick="changeCounter(1)" style="flex:1">+ Add</button>
+          <button class="action-btn ghost" onclick="changeCounter(-1)" style="flex:1">- Subtract</button>
+          <button class="action-btn red" onclick="resetCounter()">Reset</button>
+        </div>
+        <div class="output-box" id="counterOutput">localStorage.setItem("demoCounter", 0)</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- JSON SECTION -->
+<section class="section" id="json">
+  <div class="section-eyebrow gold">Storing Complex Data</div>
+  <h2 class="section-title">JSON.stringify & JSON.parse</h2>
+  <p class="section-sub">localStorage only speaks strings. To store objects and arrays, you must pack them first and unpack when reading. This is the most important skill for real projects.</p>
+
+  <div class="json-demo">
+    <div class="json-tabs">
+      <button class="json-tab active" onclick="switchTab('object')">Storing Objects</button>
+      <button class="json-tab" onclick="switchTab('array')">Storing Arrays</button>
+      <button class="json-tab" onclick="switchTab('numbers')">Storing Numbers</button>
+    </div>
+
+    <!-- Object Panel -->
+    <div class="json-panel active" id="panel-object">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Save a student object to localStorage, then read it back and access individual properties.</p>
+      <div class="code-block">
+<span class="c-kw">let</span> <span class="c-var">student</span> <span class="c-op">=</span> {<br>
+&nbsp;&nbsp;<span class="c-key">name</span>: <span class="c-str">"Chidi Okeke"</span>,<br>
+&nbsp;&nbsp;<span class="c-key">level</span>: <span class="c-num">300</span>,<br>
+&nbsp;&nbsp;<span class="c-key">cgpa</span>: <span class="c-num">4.5</span><br>
+};<br><br>
+<span class="c-cmt">// Pack before saving</span><br>
+<span class="c-var">localStorage</span>.<span class="c-fn">setItem</span>(<span class="c-str">"student"</span>, <span class="c-fn">JSON.stringify</span>(<span class="c-var">student</span>));<br><br>
+<span class="c-cmt">// Unpack after reading</span><br>
+<span class="c-kw">let</span> <span class="c-var">saved</span> <span class="c-op">=</span> <span class="c-fn">JSON.parse</span>(<span class="c-var">localStorage</span>.<span class="c-fn">getItem</span>(<span class="c-str">"student"</span>));<br>
+<span class="c-fn">console.log</span>(<span class="c-var">saved</span>.<span class="c-key">name</span>); <span class="c-cmt">// "Chidi Okeke"</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="action-btn gold" onclick="saveStudentObject()">Save Student Object</button>
+        <button class="action-btn ghost" onclick="readStudentObject()">Read It Back</button>
+        <button class="action-btn red" onclick="clearStudentObject()">Clear</button>
+      </div>
+      <div class="output-box" id="objectOutput">Click "Save Student Object" to begin.</div>
+    </div>
+
+    <!-- Array Panel -->
+    <div class="json-panel" id="panel-array">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Save an array of students, read it back, and loop through it.</p>
+      <div class="code-block">
+<span class="c-kw">let</span> <span class="c-var">classList</span> <span class="c-op">=</span> [<span class="c-str">"Chidi"</span>, <span class="c-str">"Emeka"</span>, <span class="c-str">"Amaka"</span>];<br><br>
+<span class="c-cmt">// Stringify before saving</span><br>
+<span class="c-var">localStorage</span>.<span class="c-fn">setItem</span>(<span class="c-str">"classList"</span>, <span class="c-fn">JSON.stringify</span>(<span class="c-var">classList</span>));<br><br>
+<span class="c-cmt">// Parse after reading</span><br>
+<span class="c-kw">let</span> <span class="c-var">saved</span> <span class="c-op">=</span> <span class="c-fn">JSON.parse</span>(<span class="c-var">localStorage</span>.<span class="c-fn">getItem</span>(<span class="c-str">"classList"</span>));<br>
+<span class="c-var">saved</span>.<span class="c-fn">forEach</span>(<span class="c-var">name</span> <span class="c-op">=></span> <span class="c-fn">console.log</span>(<span class="c-var">name</span>));
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="action-btn gold" onclick="saveClassArray()">Save Array</button>
+        <button class="action-btn ghost" onclick="readClassArray()">Read & Loop</button>
+        <button class="action-btn red" onclick="clearClassArray()">Clear</button>
+      </div>
+      <div class="output-box" id="arrayOutput">Click "Save Array" to begin.</div>
+    </div>
+
+    <!-- Numbers Panel -->
+    <div class="json-panel" id="panel-numbers">
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Numbers come back as strings. Always convert after reading or your math will break.</p>
+      <div class="code-block">
+<span class="c-var">localStorage</span>.<span class="c-fn">setItem</span>(<span class="c-str">"score"</span>, <span class="c-num">85</span>);<br><br>
+<span class="c-cmt">// Comes back as string — WRONG</span><br>
+<span class="c-kw">let</span> <span class="c-var">wrong</span> <span class="c-op">=</span> <span class="c-var">localStorage</span>.<span class="c-fn">getItem</span>(<span class="c-str">"score"</span>);<br>
+<span class="c-fn">console.log</span>(<span class="c-var">wrong</span> <span class="c-op">+</span> <span class="c-num">10</span>); <span class="c-cmt">// "8510" — wrong!</span><br><br>
+<span class="c-cmt">// Convert back — CORRECT</span><br>
+<span class="c-kw">let</span> <span class="c-var">correct</span> <span class="c-op">=</span> <span class="c-fn">Number</span>(<span class="c-var">localStorage</span>.<span class="c-fn">getItem</span>(<span class="c-str">"score"</span>));<br>
+<span class="c-fn">console.log</span>(<span class="c-var">correct</span> <span class="c-op">+</span> <span class="c-num">10</span>); <span class="c-cmt">// 95 — correct!</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="action-btn gold" onclick="demoNumberWrong()">Show Wrong Result</button>
+        <button class="action-btn green" onclick="demoNumberRight()">Show Right Result</button>
+      </div>
+      <div class="output-box" id="numberOutput">Click a button to see the difference.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SESSION STORAGE -->
+<section class="section" id="sessionStorage">
+  <div class="section-eyebrow blue">sessionStorage</div>
+  <h2 class="section-title">Lives only while the tab is open</h2>
+  <p class="section-sub">Same methods as localStorage — but the data disappears the moment you close the tab. Perfect for temporary one-session data.</p>
+
+  <div class="demo-grid">
+
+    <!-- Session write/read -->
+    <div class="demo-card">
+      <div class="demo-head">
+        <h3>setItem & getItem</h3>
+        <span class="demo-tag blue">sessionStorage</span>
+      </div>
+      <div class="demo-body">
+        <div class="session-indicator">
+          <div class="session-dot"></div>
+          <span style="font-size:0.8rem;color:var(--session);">Session is active — close tab to clear all</span>
+        </div>
+        <div class="field-row">
+          <input type="text" id="sessKey" placeholder="Key">
+          <input type="text" id="sessValue" placeholder="Value" style="flex:1.5">
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="action-btn blue" onclick="sessSet()">Save</button>
+          <button class="action-btn ghost" onclick="sessGet()">Read</button>
+          <button class="action-btn red" onclick="sessRemove()">Delete</button>
+        </div>
+        <div class="output-box" id="sessOutput">Enter a key and value above.</div>
+      </div>
+    </div>
+
+    <!-- Session vs Local -->
+    <div class="demo-card">
+      <div class="demo-head">
+        <h3>localStorage vs sessionStorage</h3>
+        <span class="demo-tag green">comparison</span>
+      </div>
+      <div class="demo-body">
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Save a value to both. Refresh the page — see which one survives.</p>
+        <div class="field-row" style="margin-bottom:0.75rem;">
+          <input type="text" id="bothValue" placeholder="Type something...">
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+          <button class="action-btn gold" onclick="saveToBoth()" style="flex:1">Save to Both</button>
+          <button class="action-btn ghost" onclick="readFromBoth()" style="flex:1">Read Both</button>
+        </div>
+        <div class="output-box" id="bothOutput">Type something and click "Save to Both" — then refresh and click "Read Both".</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="section-eyebrow green">Real World Projects</div>
+  <h2 class="section-title">Everything connecting together</h2>
+  <p class="section-sub">Two real projects that use localStorage the way professional apps do — objects, arrays, JSON, and persistence all working together.</p>
+
+  <div class="tracker-layout">
+
+    <!-- Keke Earnings Tracker -->
+    <div class="tracker-card">
+      <h3>🛺 Keke Earnings Tracker</h3>
+
+      <div class="tracker-total">
+        <div class="amount" id="trackerTotal">₦0</div>
+        <div class="label">Total saved across all sessions</div>
+      </div>
+
+      <div class="field-row" style="margin-bottom:0.75rem;">
+        <input type="number" id="earningAmount" placeholder="Enter today's earnings e.g. 8500" class="demo-input" style="flex:1">
+      </div>
+
+      <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+        <button class="action-btn gold" onclick="addEarning()" style="flex:1">Record Day</button>
+        <button class="action-btn red" onclick="clearEarnings()">Clear All</button>
+      </div>
+
+      <div class="earnings-list" id="earningsList">
+        <div class="empty-state">No earnings recorded yet.</div>
+      </div>
+    </div>
+
+    <!-- Login Session -->
+    <div class="session-demo">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px;">
+        🔐 Login That Persists
+      </h3>
+
+      <div id="loginForm">
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Log in — then refresh the page. You stay logged in because the session is saved in localStorage.</p>
+        <div class="field-row" style="flex-direction:column;gap:0.5rem;">
+          <input type="text" id="loginUser" placeholder="Username: anthony" style="width:100%">
+          <input type="password" id="loginPass" placeholder="Password: 1234" style="width:100%">
+        </div>
+        <button class="action-btn blue" onclick="doLogin()" style="width:100%;margin-top:0.5rem;">Log In</button>
+        <div class="output-box" id="loginOutput">Enter credentials above.</div>
+      </div>
+
+      <div id="loggedInPanel" style="display:none;">
+        <div style="background:var(--green-dim);border:1px solid rgba(46,204,113,0.25);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem;">
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px;">Logged in as</div>
+          <div style="font-size:1.1rem;font-weight:700;color:var(--green);" id="welcomeUser">Anthony</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;" id="loginTime"></div>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Refresh the page — you will still be logged in. That's localStorage at work.</p>
+        <button class="action-btn red" onclick="doLogout()" style="width:100%;">Log Out</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- RULES -->
+<section class="section">
+  <div class="section-eyebrow gold">Golden Rules</div>
+  <h2 class="section-title">Three things to never forget</h2>
+  <p class="section-sub">Break any of these and your storage code will give you bugs that are very hard to track down.</p>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rule-number" style="color:var(--local);">01</div>
+      <h4>Everything is a string</h4>
+      <p>Numbers, booleans, objects — all become strings when saved. Use <code style="color:var(--local);font-family:var(--mono)">Number()</code> for numbers and <code style="color:var(--local);font-family:var(--mono)">JSON.parse()</code> for objects when reading back. Forgetting this breaks your math silently.</p>
+    </div>
+    <div class="rule-card">
+      <div class="rule-number" style="color:var(--session);">02</div>
+      <h4>Always check for null</h4>
+      <p>If a key doesn't exist, <code style="color:var(--session);font-family:var(--mono)">getItem()</code> returns <code style="color:var(--session);font-family:var(--mono)">null</code>. Calling <code style="color:var(--session);font-family:var(--mono)">JSON.parse(null)</code> returns null — but accessing <code style="color:var(--session);font-family:var(--mono)">null.name</code> crashes. Always check if the value exists before using it.</p>
+    </div>
+    <div class="rule-card">
+      <div class="rule-number" style="color:var(--red);">03</div>
+      <h4>Never store sensitive data</h4>
+      <p>Passwords, BVN, card numbers, PINs — never in localStorage. Anyone with access to the browser can read it. It is plain text with zero encryption. Use it only for preferences and non-sensitive state.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Built for <strong>JavaScript students</strong> — open DevTools → Application tab to watch storage change live as you interact.</p>
+</footer>
+
+<script>
+
+// ===== NAV =====
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', function() {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+
+function closeMenu() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+// ===== HELPERS =====
+function setOutput(id, msg, type) {
+  let el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'output-box' + (type ? ' ' + type : '');
+}
+
+// ===== DEMO 1: setItem / getItem =====
+function demoSetItem() {
+  let key = document.getElementById('setKey').value.trim();
+  let value = document.getElementById('setValue').value.trim();
+  if (!key || !value) { setOutput('setGetOutput', 'Enter both a key and a value.', 'warn'); return; }
+  localStorage.setItem(key, value);
+  setOutput('setGetOutput', '✓ Saved!  localStorage.setItem("' + key + '", "' + value + '")');
+}
+
+function demoGetItem() {
+  let key = document.getElementById('setKey').value.trim();
+  if (!key) { setOutput('setGetOutput', 'Enter a key to read.', 'warn'); return; }
+  let val = localStorage.getItem(key);
+  if (val !== null) {
+    setOutput('setGetOutput', '✓ Found: "' + val + '"  ← localStorage.getItem("' + key + '")');
+  } else {
+    setOutput('setGetOutput', '✗ Key "' + key + '" not found — returns null', 'error');
+  }
+}
+
+function demoRemoveItem() {
+  let key = document.getElementById('setKey').value.trim();
+  if (!key) { setOutput('setGetOutput', 'Enter a key to delete.', 'warn'); return; }
+  localStorage.removeItem(key);
+  setOutput('setGetOutput', '✓ Deleted: localStorage.removeItem("' + key + '")');
+}
+
+// ===== DEMO 2: View all storage =====
+function viewAllStorage() {
+  let container = document.getElementById('allStorageDisplay');
+  container.innerHTML = '';
+  if (localStorage.length === 0) {
+    container.innerHTML = '<div class="empty-state">localStorage is empty.</div>';
+    return;
+  }
+  for (let i = 0; i < localStorage.length; i++) {
+    let key = localStorage.key(i);
+    let val = localStorage.getItem(key);
+    let row = document.createElement('div');
+    row.className = 'storage-row gold-row';
+    row.innerHTML = '<span class="storage-key">' + key + '</span><span class="storage-val">' + val + '</span><button class="storage-del" onclick="deleteAndRefresh(\'' + key + '\')">✕</button>';
+    container.appendChild(row);
+  }
+}
+
+function deleteAndRefresh(key) {
+  localStorage.removeItem(key);
+  viewAllStorage();
+}
+
+function clearAllStorage() {
+  localStorage.clear();
+  viewAllStorage();
+  setOutput('setGetOutput', '✓ All localStorage cleared.');
+}
+
+// ===== DEMO 3: Theme =====
+window.addEventListener('DOMContentLoaded', function() {
+  let savedTheme = localStorage.getItem('demoTheme') || 'dark';
+  applyThemeDemo(savedTheme, false);
+  initCounter();
+  initTracker();
+  checkLogin();
+});
+
+function applyThemeDemo(theme, save) {
+  let box = document.getElementById('themeDemoBox');
+  let title = document.getElementById('themeTitle');
+  let desc = document.getElementById('themeDesc');
+  let btn = document.getElementById('themeToggleBtn');
+  if (theme === 'light') {
+    box.classList.add('light-theme');
+    title.textContent = '☀️ Light Theme Active';
+    desc.textContent = 'This preference is saved to localStorage';
+    btn.textContent = 'Switch to Dark Theme';
+    if (save) setOutput('themeOutput', 'localStorage.setItem("demoTheme", "light")  → saved!');
+  } else {
+    box.classList.remove('light-theme');
+    title.textContent = '🌙 Dark Theme Active';
+    desc.textContent = 'This preference is saved to localStorage';
+    btn.textContent = 'Switch to Light Theme';
+    if (save) setOutput('themeOutput', 'localStorage.setItem("demoTheme", "dark")  → saved!');
+  }
+}
+
+function toggleThemeDemo() {
+  let current = localStorage.getItem('demoTheme') || 'dark';
+  let next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('demoTheme', next);
+  applyThemeDemo(next, true);
+}
+
+// ===== DEMO 4: Counter =====
+function initCounter() {
+  let count = Number(localStorage.getItem('demoCounter')) || 0;
+  document.getElementById('counterDisplay').textContent = count;
+  setOutput('counterOutput', 'localStorage.getItem("demoCounter") → ' + count);
+}
+
+function changeCounter(delta) {
+  let count = Number(localStorage.getItem('demoCounter')) || 0;
+  count += delta;
+  localStorage.setItem('demoCounter', count);
+  document.getElementById('counterDisplay').textContent = count;
+  setOutput('counterOutput', 'localStorage.setItem("demoCounter", ' + count + ')  → saved!');
+}
+
+function resetCounter() {
+  localStorage.setItem('demoCounter', 0);
+  document.getElementById('counterDisplay').textContent = 0;
+  setOutput('counterOutput', 'Counter reset → localStorage.setItem("demoCounter", 0)');
+}
+
+// ===== JSON TABS =====
+function switchTab(name) {
+  document.querySelectorAll('.json-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.json-panel').forEach(function(p) { p.classList.remove('active'); });
+  event.target.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// ===== JSON OBJECT =====
+function saveStudentObject() {
+  let student = { name: "Chidi Okeke", level: 300, cgpa: 4.5, department: "Computer Science" };
+  localStorage.setItem('demoStudent', JSON.stringify(student));
+  setOutput('objectOutput', '✓ Saved!  JSON.stringify() converted the object to:\n' + JSON.stringify(student));
+}
+
+function readStudentObject() {
+  let raw = localStorage.getItem('demoStudent');
+  if (!raw) { setOutput('objectOutput', '✗ No student saved yet. Click "Save Student Object" first.', 'error'); return; }
+  let student = JSON.parse(raw);
+  setOutput('objectOutput', '✓ Read back with JSON.parse():\nname → "' + student.name + '"\nlevel → ' + student.level + '\ncgpa → ' + student.cgpa);
+}
+
+function clearStudentObject() {
+  localStorage.removeItem('demoStudent');
+  setOutput('objectOutput', '✓ Student object removed from localStorage.');
+}
+
+// ===== JSON ARRAY =====
+function saveClassArray() {
+  let classList = ["Chidi", "Emeka", "Amaka", "Tunde", "Ngozi"];
+  localStorage.setItem('demoClassList', JSON.stringify(classList));
+  setOutput('arrayOutput', '✓ Array saved!  Stored as: ' + JSON.stringify(classList));
+}
+
+function readClassArray() {
+  let raw = localStorage.getItem('demoClassList');
+  if (!raw) { setOutput('arrayOutput', '✗ No array saved yet. Click "Save Array" first.', 'error'); return; }
+  let list = JSON.parse(raw);
+  let result = '✓ Array read back — looping with forEach:\n';
+  list.forEach(function(name, i) { result += (i + 1) + '. ' + name + '\n'; });
+  setOutput('arrayOutput', result.trim());
+}
+
+function clearClassArray() {
+  localStorage.removeItem('demoClassList');
+  setOutput('arrayOutput', '✓ Array removed from localStorage.');
+}
+
+// ===== JSON NUMBERS =====
+function demoNumberWrong() {
+  localStorage.setItem('demoScore', 85);
+  let wrong = localStorage.getItem('demoScore');
+  setOutput('numberOutput', '✗ WRONG — typeof: "' + typeof wrong + '"\n"' + wrong + '" + 10 = "' + (wrong + 10) + '"  ← string concatenation!', 'error');
+}
+
+function demoNumberRight() {
+  localStorage.setItem('demoScore', 85);
+  let right = Number(localStorage.getItem('demoScore'));
+  setOutput('numberOutput', '✓ RIGHT — Number() converts it back:\ntypeof: "' + typeof right + '"\n' + right + ' + 10 = ' + (right + 10) + '  ← real addition!');
+}
+
+// ===== SESSION STORAGE =====
+function sessSet() {
+  let k = document.getElementById('sessKey').value.trim();
+  let v = document.getElementById('sessValue').value.trim();
+  if (!k || !v) { setOutput('sessOutput', 'Enter both key and value.', 'warn'); return; }
+  sessionStorage.setItem(k, v);
+  setOutput('sessOutput', '✓ sessionStorage.setItem("' + k + '", "' + v + '")  → saved for this session only.');
+}
+
+function sessGet() {
+  let k = document.getElementById('sessKey').value.trim();
+  if (!k) { setOutput('sessOutput', 'Enter a key to read.', 'warn'); return; }
+  let val = sessionStorage.getItem(k);
+  if (val !== null) {
+    setOutput('sessOutput', '✓ Found: "' + val + '"');
+  } else {
+    setOutput('sessOutput', '✗ "' + k + '" not found — returns null', 'error');
+  }
+}
+
+function sessRemove() {
+  let k = document.getElementById('sessKey').value.trim();
+  if (!k) { setOutput('sessOutput', 'Enter a key to delete.', 'warn'); return; }
+  sessionStorage.removeItem(k);
+  setOutput('sessOutput', '✓ sessionStorage.removeItem("' + k + '")  → gone.');
+}
+
+function saveToBoth() {
+  let val = document.getElementById('bothValue').value.trim();
+  if (!val) { setOutput('bothOutput', 'Enter something first.', 'warn'); return; }
+  localStorage.setItem('bothTest', val);
+  sessionStorage.setItem('bothTest', val);
+  setOutput('bothOutput', '✓ Saved "' + val + '" to both storages.\n\nNow REFRESH the page and click "Read Both" to see which one survived.');
+}
+
+function readFromBoth() {
+  let local = localStorage.getItem('bothTest');
+  let session = sessionStorage.getItem('bothTest');
+  let msg = '';
+  msg += 'localStorage:  ' + (local !== null ? '"' + local + '" ✓ survived!' : 'null — gone after refresh') + '\n';
+  msg += 'sessionStorage: ' + (session !== null ? '"' + session + '" ✓ still alive' : 'null — cleared when tab closed ✗');
+  setOutput('bothOutput', msg, local && !session ? '' : '');
+}
+
+// ===== KEKE TRACKER =====
+function initTracker() {
+  renderEarnings();
+}
+
+function addEarning() {
+  let amount = Number(document.getElementById('earningAmount').value);
+  if (!amount || amount <= 0) return;
+
+  let saved = localStorage.getItem('kekeEarnings');
+  let earnings = saved ? JSON.parse(saved) : [];
+
+  let today = new Date().toLocaleDateString('en-GB');
+  earnings.unshift({ date: today, amount: amount });
+
+  localStorage.setItem('kekeEarnings', JSON.stringify(earnings));
+  document.getElementById('earningAmount').value = '';
+  renderEarnings();
+}
+
+function renderEarnings() {
+  let saved = localStorage.getItem('kekeEarnings');
+  let list = document.getElementById('earningsList');
+  let total = document.getElementById('trackerTotal');
+
+  if (!saved) {
+    list.innerHTML = '<div class="empty-state">No earnings yet. Record your first day.</div>';
+    total.textContent = '₦0';
+    return;
+  }
+
+  let earnings = JSON.parse(saved);
+  let sum = earnings.reduce(function(acc, e) { return acc + e.amount; }, 0);
+  total.textContent = '₦' + sum.toLocaleString();
+
+  list.innerHTML = '';
+  earnings.forEach(function(e) {
+    let row = document.createElement('div');
+    row.className = 'earning-row';
+    row.innerHTML = '<span class="earning-date">' + e.date + '</span><span class="earning-amount">₦' + e.amount.toLocaleString() + '</span>';
+    list.appendChild(row);
+  });
+}
+
+function clearEarnings() {
+  localStorage.removeItem('kekeEarnings');
+  renderEarnings();
+}
+
+// ===== LOGIN =====
+function checkLogin() {
+  let saved = localStorage.getItem('demoUser');
+  if (saved) {
+    let user = JSON.parse(saved);
+    showLoggedIn(user);
+  }
+}
+
+function doLogin() {
+  let username = document.getElementById('loginUser').value.trim();
+  let password = document.getElementById('loginPass').value;
+
+  if (username === 'anthony' && password === '1234') {
+    let user = {
+      username: username,
+      loginTime: new Date().toLocaleString('en-GB')
+    };
+    localStorage.setItem('demoUser', JSON.stringify(user));
+    showLoggedIn(user);
+  } else {
+    setOutput('loginOutput', '✗ Wrong credentials. Try: anthony / 1234', 'error');
+  }
+}
+
+function showLoggedIn(user) {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('loggedInPanel').style.display = 'block';
+  document.getElementById('welcomeUser').textContent = user.username;
+  document.getElementById('loginTime').textContent = 'Logged in: ' + user.loginTime;
+}
+
+function doLogout() {
+  localStorage.removeItem('demoUser');
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('loggedInPanel').style.display = 'none';
+  setOutput('loginOutput', '✓ Logged out. localStorage.removeItem("demoUser")');
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    let target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+</script>
+</body>
+</html>

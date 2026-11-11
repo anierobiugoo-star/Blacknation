@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow Pro — Focus on what matters</title>
+<meta name="description" content="TaskFlow Pro is a premium productivity workspace: tasks, calendar, notes, focus timers and analytics in one calm, fast interface.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css?v=5">
+<link rel="stylesheet" href="assets/css/responsive.css?v=5">
+</head>
+<body data-page="landing">
+
+<!-- ============================= NAVBAR ============================= -->
+<header class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">TF</span>
+      TaskFlow <span style="color:var(--signal-bright)">Pro</span>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#features">Features</a>
+      <a href="#stats">Product</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-secondary">Log in</a>
+      <a href="register.html" class="btn btn-primary">Get started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================= HERO ============================= -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-copy">
+      <span class="eyebrow">Now with focus analytics</span>
+      <h1>Plan the day. <em>Protect</em> the focus.</h1>
+      <p>TaskFlow Pro brings your tasks, calendar, notes and focus sessions into one calm workspace — so the plan for today never gets lost in ten other apps.</p>
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-right-long"></i> Start free — no card needed
+        </a>
+        <a href="login.html" class="btn btn-ghost">
+          <i class="fa-solid fa-play"></i> See it in action
+        </a>
+      </div>
+      <div class="hero-meta">
+        <div class="avatar-stack">
+          <span>JK</span><span>MR</span><span>AL</span><span>+2k</span>
+        </div>
+        <span>Trusted by 2,000+ focused people</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="preview-card preview-main glass">
+        <div class="preview-main-header">
+          <div class="preview-dot-row"><span></span><span></span><span></span></div>
+          <span class="eyebrow" style="font-size:0.65rem">Today</span>
+        </div>
+
+        <div class="preview-task done">
+          <div class="preview-check"><i class="fa-solid fa-check"></i></div>
+          <span class="preview-task-title">Ship weekly report</span>
+          <span class="preview-badge low">Low</span>
+        </div>
+        <div class="preview-task">
+          <div class="preview-check"></div>
+          <span class="preview-task-title">Review design handoff</span>
+          <span class="preview-badge med">Medium</span>
+        </div>
+        <div class="preview-task">
+          <div class="preview-check"></div>
+          <span class="preview-task-title">Client call — 3:00 PM</span>
+          <span class="preview-badge high">Urgent</span>
+        </div>
+      </div>
+
+      <div class="preview-card focus-ring-card glass">
+        <span class="focus-ring-label">Focus session</span>
+        <svg class="focus-ring-svg" viewBox="0 0 130 130">
+          <defs>
+            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#c9a227"/>
+              <stop offset="50%" stop-color="#e4c767"/>
+              <stop offset="100%" stop-color="#c9a227"/>
+            </linearGradient>
+          </defs>
+          <circle class="focus-ring-track" cx="65" cy="65" r="52"></circle>
+          <circle class="focus-ring-progress" cx="65" cy="65" r="52"></circle>
+          <text x="65" y="70" text-anchor="middle" class="focus-ring-time">25:00</text>
+        </svg>
+        <span class="focus-ring-sub">Deep work block</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FEATURES ============================= -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Everything in one place</span>
+      <h2>Built for people who actually finish their lists</h2>
+      <p>Every tool below shares the same data — no copy-pasting between five different apps.</p>
+    </div>
+
+    <div class="feature-grid reveal-stagger">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(201,162,39,0.16); color:var(--signal-bright)"><i class="fa-solid fa-list-check"></i></div>
+        <h3>Task Management</h3>
+        <p>Categories, priorities, due dates and drag-and-drop ordering that keeps up with real days.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,92,50,0.16); color:var(--amber)"><i class="fa-solid fa-cloud-sun"></i></div>
+        <h3>Live Weather</h3>
+        <p>Check conditions for your city — or anywhere — before you plan tomorrow's outdoor tasks.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(30,111,92,0.16); color:var(--teal)"><i class="fa-solid fa-quote-left"></i></div>
+        <h3>Daily Quotes</h3>
+        <p>A fresh line of perspective every morning, saved to your favorites when it hits home.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(140,47,57,0.18); color:var(--coral)"><i class="fa-solid fa-calendar-days"></i></div>
+        <h3>Calendar</h3>
+        <p>See every task by day or month, with today and busy dates highlighted at a glance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(201,162,39,0.16); color:var(--signal-bright)"><i class="fa-solid fa-chart-line"></i></div>
+        <h3>Analytics</h3>
+        <p>Completion trends, category breakdowns and a weekly productivity score, charted automatically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(44,95,138,0.16); color:#2c5f8a"><i class="fa-solid fa-moon"></i></div>
+        <h3>Dark Mode</h3>
+        <p>Easy on the eyes by default, with a light theme and accent colors ready when you want them.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,92,50,0.16); color:var(--amber)"><i class="fa-solid fa-note-sticky"></i></div>
+        <h3>Quick Notes</h3>
+        <p>Color-coded, pinnable notes for the things too short to be a task but too important to lose.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(30,111,92,0.16); color:var(--teal)"><i class="fa-solid fa-stopwatch"></i></div>
+        <h3>Focus Timer</h3>
+        <p>Pomodoro, stopwatch and countdown tools built in, so focus time never needs a separate app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= STATS ============================= -->
+<section class="section stats-section" id="stats">
+  <div class="container">
+    <div class="stats-grid reveal-stagger">
+      <div>
+        <div class="stat-number">2,140+</div>
+        <div class="stat-label">Active workspaces</div>
+      </div>
+      <div>
+        <div class="stat-number">318K</div>
+        <div class="stat-label">Tasks completed</div>
+      </div>
+      <div>
+        <div class="stat-number">96%</div>
+        <div class="stat-label">Would recommend</div>
+      </div>
+      <div>
+        <div class="stat-number">4.8/5</div>
+        <div class="stat-label">Average rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= TESTIMONIALS ============================= -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Loved by focused teams</span>
+      <h2>What people say after the first week</h2>
+    </div>
+
+    <div class="testimonial-grid reveal-stagger">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">I finally stopped losing tasks between three different apps. Everything about my day lives in one screen now.</p>
+        <div class="testimonial-person">
+          <div class="testimonial-avatar">JK</div>
+          <div>
+            <div class="testimonial-name">Jordan Kim</div>
+            <div class="testimonial-role">Product Designer</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">The focus timer paired with analytics is the combination I didn't know I needed. My weekly score keeps me honest.</p>
+        <div class="testimonial-person">
+          <div class="testimonial-avatar">MR</div>
+          <div>
+            <div class="testimonial-name">Maria Reyes</div>
+            <div class="testimonial-role">Graduate Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">Clean, fast, and it doesn't try to be everything. Notes and tasks share the same categories, which sounds small until you use it.</p>
+        <div class="testimonial-person">
+          <div class="testimonial-avatar">AL</div>
+          <div>
+            <div class="testimonial-name">Aiden Lee</div>
+            <div class="testimonial-role">Freelance Developer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FAQ ============================= -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Questions</span>
+      <h2>Before you get started</h2>
+    </div>
+
+    <div class="faq-list reveal">
+      <div class="faq-item open">
+        <button class="faq-question">
+          Is my data stored anywhere online?
+          <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+        </button>
+        <div class="faq-answer"><p>Your tasks, notes and settings are saved locally in your browser. Nothing is sent to a server, so your workspace is private to this device.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Can I use TaskFlow Pro on my phone?
+          <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+        </button>
+        <div class="faq-answer"><p>Yes. The entire app is responsive and built to feel native on desktop, tablet and mobile screens alike.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Is there a limit on tasks or notes?
+          <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+        </button>
+        <div class="faq-answer"><p>No artificial limits. Create as many tasks, categories and notes as your workflow needs.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          What happens if I clear my browser data?
+          <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+        </button>
+        <div class="faq-answer"><p>Since everything lives in local storage, clearing site data will reset your workspace. Exporting or backing up is on our roadmap.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= CTA ============================= -->
+<section class="section">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <h2>Ready to protect your focus?</h2>
+      <p>Create a free account in seconds — no card, no setup, just your first task list.</p>
+      <a href="register.html" class="btn btn-primary">Create your workspace <i class="fa-solid fa-arrow-right-long"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo"><span class="logo-mark">TF</span>TaskFlow Pro</a>
+        <p>A calm, focused productivity workspace for tasks, notes, calendar and deep work — all in your browser.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#stats">Product</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="login.html">Log in</a>
+        <a href="register.html">Register</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#testimonials">Reviews</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TaskFlow Pro. All rights reserved.</span>
+      <div class="footer-socials">
+        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-github"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/app.js?v=5"></script>
+</body>
+</html>

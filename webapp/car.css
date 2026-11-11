@@ -1,0 +1,168 @@
+ *,
+  *::before,
+  *::after { box-sizing: border-box; }
+
+  :root {
+    --key:        #252a3a;
+    --key-hover:  #2f3549;
+    --fn:         #333a50;
+    --fn-hover:   #3d4560;
+    --text:       #eef2ff;
+    --muted:      #7e88a8;
+    --accent:     #ff9a4d;
+    --accent-2:   #ff7a1a;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background:
+      radial-gradient(1200px 600px at 15% 0%, #2b3350 0%, transparent 55%),
+      radial-gradient(900px 500px at 85% 100%, #3a2338 0%, transparent 55%),
+      linear-gradient(160deg, #14171f, #08090d);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Shell ---------- */
+  .calculator {
+    width: min(360px, 100%);
+    padding: 20px;
+    border-radius: 28px;
+    background: linear-gradient(165deg, #1d2130 0%, #12151e 100%);
+    border: 1px solid rgba(255, 255, 255, .07);
+    box-shadow:
+      0 40px 80px -30px rgba(0, 0, 0, .9),
+      0 1px 0 rgba(255, 255, 255, .06) inset,
+      0 -1px 0 rgba(0, 0, 0, .5) inset;
+  }
+
+  /* ---------- Screen ---------- */
+  .screen {
+    padding: 16px 18px 14px;
+    margin-bottom: 16px;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, .35);
+    border: 1px solid rgba(255, 255, 255, .05);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset;
+    text-align: right;
+    overflow: hidden;
+  }
+
+  .expression {
+    min-height: 22px;
+    font-size: .95rem;
+    line-height: 22px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .display {
+    font-size: 48px;
+    line-height: 1.15;
+    font-weight: 500;
+    letter-spacing: -.01em;
+    color: #f3f6ff;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: font-size .12s ease;
+  }
+
+  .display[data-size="md"] { font-size: 38px; }
+  .display[data-size="sm"] { font-size: 31px; }
+  .display[data-size="xs"] { font-size: 26px; }
+
+  /* ---------- Keypad ---------- */
+  .keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    border: none;
+    border-radius: 16px;
+    background: var(--key);
+    color: var(--text);
+    font: inherit;
+    font-size: 1.4rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background-color .15s ease, transform .08s ease, filter .15s ease;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, .06) inset,
+      0 2px 6px rgba(0, 0, 0, .25);
+  }
+
+  .key:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .key--fn {
+    background: var(--fn);
+    color: #a9b3d1;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .key--op {
+    background: rgba(255, 154, 77, .14);
+    color: var(--accent);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .key--eq {
+    background: linear-gradient(160deg, #ffb066, var(--accent-2));
+    color: #1b1005;
+    font-size: 1.5rem;
+    font-weight: 700;
+    box-shadow:
+      0 6px 18px -6px rgba(255, 122, 26, .8),
+      0 1px 0 rgba(255, 255, 255, .35) inset;
+  }
+
+  @media (hover: hover) {
+    .key:hover        { background-color: var(--key-hover); }
+    .key--fn:hover    { background-color: var(--fn-hover); }
+    .key--op:hover    { background-color: rgba(255, 154, 77, .24); }
+    .key--eq:hover    { filter: brightness(1.07); }
+  }
+
+  .key:active,
+  .key.is-active {
+    transform: scale(.94);
+    filter: brightness(1.15);
+  }
+
+  /* ---------- Short screens ---------- */
+  @media (max-height: 680px) {
+    .calculator     { width: min(320px, 100%); padding: 14px; border-radius: 22px; }
+    .screen         { padding: 12px 14px 10px; margin-bottom: 12px; }
+    .keys           { gap: 8px; }
+    .key            { border-radius: 13px; font-size: 1.2rem; }
+    .key--op,
+    .key--eq        { font-size: 1.3rem; }
+    .key--fn        { font-size: 1rem; }
+    .display        { font-size: 40px; }
+    .display[data-size="md"] { font-size: 33px; }
+    .display[data-size="sm"] { font-size: 27px; }
+    .display[data-size="xs"] { font-size: 22px; }
+  }

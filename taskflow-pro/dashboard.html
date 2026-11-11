@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — TaskFlow Pro</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css?v=5">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=5">
+<link rel="stylesheet" href="assets/css/responsive.css?v=5">
+</head>
+<body data-page="dashboard">
+
+<div class="app-shell">
+
+  <!-- ============================= SIDEBAR ============================= -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span class="logo-mark">TF</span>TaskFlow Pro</div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="sidebar-link active" data-view="home"><i class="fa-solid fa-grid-2" style="color:var(--signal-bright)"></i> Dashboard</a>
+      <a href="#" class="sidebar-link" data-view="tasks"><i class="fa-solid fa-list-check" style="color:var(--amber)"></i> Tasks <span class="badge-count" id="taskCountBadge">0</span></a>
+      <a href="#" class="sidebar-link" data-view="calendar"><i class="fa-solid fa-calendar-days" style="color:#2c5f8a"></i> Calendar</a>
+      <a href="#" class="sidebar-link" data-view="notes"><i class="fa-solid fa-note-sticky" style="color:var(--teal)"></i> Notes</a>
+      <a href="#" class="sidebar-link" data-view="favorites"><i class="fa-solid fa-star" style="color:var(--coral)"></i> Favorites</a>
+      <a href="#" class="sidebar-link" data-view="focus"><i class="fa-solid fa-stopwatch" style="color:#7a4b94"></i> Focus</a>
+      <a href="#" class="sidebar-link" data-view="analytics"><i class="fa-solid fa-chart-line" style="color:var(--signal-bright)"></i> Analytics</a>
+      <div class="sidebar-divider"></div>
+      <a href="#" class="sidebar-link" data-view="profile"><i class="fa-solid fa-user" style="color:#2c5f8a"></i> Profile</a>
+      <a href="#" class="sidebar-link" data-view="settings"><i class="fa-solid fa-gear" style="color:var(--text-muted)"></i> Settings</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebarUser" style="cursor:pointer">
+        <div class="sidebar-user-avatar" id="sidebarAvatar">--</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebarUserName">—</div>
+          <div class="sidebar-user-email" id="sidebarUserEmail">—</div>
+        </div>
+      </div>
+      <a href="#" class="sidebar-link" id="logoutBtn" style="margin-top:10px; color:var(--coral)">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- ============================= BOTTOM NAV (mobile) ============================= -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="#" class="bottom-nav-link active" data-view="home"><i class="fa-solid fa-grid-2"></i><span>Home</span></a>
+    <a href="#" class="bottom-nav-link" data-view="tasks"><i class="fa-solid fa-list-check"></i><span>Tasks</span></a>
+    <a href="#" class="bottom-nav-link" data-view="calendar"><i class="fa-solid fa-calendar-days"></i><span>Calendar</span></a>
+    <a href="#" class="bottom-nav-link" data-view="notes"><i class="fa-solid fa-note-sticky"></i><span>Notes</span></a>
+    <button type="button" class="bottom-nav-link" id="bottomNavMore"><i class="fa-solid fa-ellipsis"></i><span>More</span></button>
+  </nav>
+
+  <!-- ============================= MAIN ============================= -->
+  <div class="main-area">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="topbar-greeting">
+          <h1 id="greetingText">Good Morning</h1>
+          <span class="date-line" id="dateLine">—</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="live-clock" id="liveClock">00:00:00</span>
+        <button class="icon-btn" id="darkModeToggle" data-tooltip="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <!-- ===================== DASHBOARD HOME ===================== -->
+      <section class="view active" data-view="home">
+
+        <div class="dashboard-section">
+          <span class="eyebrow">Overview</span>
+          <div class="stat-cards-grid" id="statCardsGrid"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <span class="eyebrow">Daily Orbit</span>
+          <div class="panel orbit-card">
+            <div class="orbit-layout">
+              <svg class="orbit-svg" viewBox="0 0 320 320">
+                <defs>
+                  <linearGradient id="orbitHandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#c9a227"/>
+                    <stop offset="100%" stop-color="#e4c767"/>
+                  </linearGradient>
+                </defs>
+                <circle class="orbit-track" cx="160" cy="160" r="130"></circle>
+                <g id="orbitTicks"></g>
+                <g id="orbitTaskDots"></g>
+                <line id="orbitNowHand" class="orbit-hand" x1="160" y1="160" x2="160" y2="42"></line>
+                <circle class="orbit-center-dot" cx="160" cy="160" r="5"></circle>
+              </svg>
+              <div class="orbit-readout">
+                <span class="orbit-readout-label">Right now</span>
+                <div class="orbit-time" id="orbitTimeReadout">--:--</div>
+                <div class="orbit-sub" id="orbitTasksReadout">Nothing scheduled today</div>
+                <div class="orbit-legend">
+                  <span><i class="orbit-legend-dot" style="background:var(--teal)"></i>Low priority</span>
+                  <span><i class="orbit-legend-dot" style="background:var(--amber)"></i>Medium priority</span>
+                  <span><i class="orbit-legend-dot" style="background:var(--coral)"></i>High / Urgent</span>
+                </div>
+                <p class="orbit-hint">Tasks with a due time appear around the ring. Click one to open it.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-section">
+          <span class="eyebrow">Live Widgets</span>
+          <div class="widgets-row">
+            <!-- Weather widget -->
+            <div class="widget-card" style="--accent-color:var(--amber)">
+              <div class="widget-card-head">
+                <h3><i class="fa-solid fa-cloud-sun" style="color:var(--amber)"></i> Weather</h3>
+                <div class="widget-actions">
+                  <button id="weatherLocationBtn" data-tooltip="Use current location"><i class="fa-solid fa-location-crosshairs"></i></button>
+                  <button id="weatherRefreshBtn" data-tooltip="Refresh"><i class="fa-solid fa-rotate"></i></button>
+                </div>
+              </div>
+              <div class="weather-search">
+                <input type="text" id="citySearchInput" placeholder="Search a city…">
+                <button id="citySearchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+              </div>
+              <div id="weatherContent"></div>
+            </div>
+
+            <!-- Quote widget -->
+            <div class="widget-card" style="--accent-color:#7a4b94">
+              <div class="widget-card-head">
+                <h3><i class="fa-solid fa-quote-left" style="color:#7a4b94"></i> Daily Quote</h3>
+                <span class="widget-subtext">Refreshes every 24h</span>
+              </div>
+              <div id="quoteContent"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-section">
+          <span class="eyebrow">Today's Focus</span>
+          <div class="panel">
+            <div class="view-head">
+              <h2 style="--view-accent:var(--signal)">What's due today</h2>
+              <div class="view-head-actions">
+                <button class="btn btn-secondary" data-goto-view="tasks"><i class="fa-solid fa-arrow-right"></i> View all tasks</button>
+              </div>
+            </div>
+            <div class="task-list" id="todayTaskList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== TASKS ===================== -->
+      <section class="view" data-view="tasks">
+        <div class="view-head">
+          <h2 style="--view-accent:var(--amber)">Tasks</h2>
+          <div class="view-head-actions">
+            <button class="btn btn-secondary" id="bulkModeToggle"><i class="fa-solid fa-list-check"></i> Select</button>
+            <button class="btn btn-primary" id="addTaskBtn"><i class="fa-solid fa-plus"></i> New Task</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="taskSearchInput" placeholder="Search tasks by title, description, category…">
+            </div>
+            <select class="select-control" id="sortSelect">
+              <option value="createdDesc">Newest first</option>
+              <option value="createdAsc">Oldest first</option>
+              <option value="dueDate">Due date</option>
+              <option value="priority">Priority</option>
+              <option value="alphabetical">Alphabetical</option>
+              <option value="manual">Custom order</option>
+            </select>
+          </div>
+
+          <div class="filter-chips" id="filterChips">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="pending">Pending</button>
+            <button class="filter-chip" data-filter="completed">Completed</button>
+            <button class="filter-chip" data-filter="favorites">Favorites</button>
+            <button class="filter-chip" data-filter="overdue">Overdue</button>
+            <button class="filter-chip" data-filter="today">Today</button>
+          </div>
+
+          <div class="bulk-bar" id="bulkBar">
+            <span id="bulkCountLabel">0 selected</span>
+            <div class="bulk-bar-actions">
+              <button id="bulkCompleteBtn"><i class="fa-solid fa-check"></i> Complete</button>
+              <button id="bulkDeleteBtn" class="danger"><i class="fa-solid fa-trash"></i> Delete</button>
+            </div>
+          </div>
+
+          <div class="task-list" id="taskList"></div>
+        </div>
+      </section>
+
+      <!-- ===================== CALENDAR ===================== -->
+      <section class="view" data-view="calendar">
+        <div class="view-head"><h2 style="--view-accent:#2c5f8a">Calendar</h2></div>
+        <div class="calendar-layout">
+          <div class="panel">
+            <div class="calendar-header">
+              <h3 id="calendarMonthLabel">Month Year</h3>
+              <div class="calendar-nav">
+                <button class="icon-btn" id="calendarPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="icon-btn" id="calendarTodayBtn"><i class="fa-solid fa-circle-dot"></i></button>
+                <button class="icon-btn" id="calendarNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+          <div class="panel calendar-day-tasks">
+            <h4 id="calendarSelectedDateLabel">Select a date</h4>
+            <div class="task-list" id="calendarDayTaskList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== NOTES ===================== -->
+      <section class="view" data-view="notes">
+        <div class="view-head">
+          <h2 style="--view-accent:var(--teal)">Notes</h2>
+          <div class="view-head-actions">
+            <button class="btn btn-primary" id="addNoteBtn"><i class="fa-solid fa-plus"></i> New Note</button>
+          </div>
+        </div>
+        <div class="notes-grid" id="notesGrid"></div>
+      </section>
+
+      <!-- ===================== FAVORITES ===================== -->
+      <section class="view" data-view="favorites">
+        <div class="view-head"><h2 style="--view-accent:var(--coral)">Favorites</h2></div>
+
+        <div class="favorites-tabs">
+          <button class="focus-tab active" data-fav-tab="tasks">Favorite Tasks</button>
+          <button class="focus-tab" data-fav-tab="quotes">Favorite Quotes</button>
+          <button class="focus-tab" data-fav-tab="notes">Pinned Notes</button>
+        </div>
+
+        <div class="panel">
+          <div class="task-list" id="favTasksList" style="display:block"></div>
+          <div class="task-list" id="favQuotesList" style="display:none"></div>
+          <div class="notes-grid" id="favNotesList" style="display:none"></div>
+        </div>
+      </section>
+
+      <!-- ===================== FOCUS ===================== -->
+      <section class="view" data-view="focus">
+        <div class="view-head"><h2 style="--view-accent:#7a4b94">Focus Tools</h2></div>
+
+        <div class="panel">
+          <div class="focus-tabs">
+            <button class="focus-tab active" data-focus-tab="pomodoro">Pomodoro</button>
+            <button class="focus-tab" data-focus-tab="stopwatch">Stopwatch</button>
+            <button class="focus-tab" data-focus-tab="countdown">Countdown</button>
+          </div>
+
+          <!-- Pomodoro -->
+          <div class="focus-panel active" data-focus-panel="pomodoro">
+            <span class="focus-mode-label" id="pomodoroModeLabel">Focus session</span>
+            <svg class="focus-display-ring" viewBox="0 0 200 200">
+              <defs>
+                <linearGradient id="pomoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#c9a227"/>
+                  <stop offset="50%" stop-color="#e4c767"/>
+                  <stop offset="100%" stop-color="#c9a227"/>
+                </linearGradient>
+              </defs>
+              <circle class="focus-ring-track" cx="100" cy="100" r="85"></circle>
+              <circle class="focus-ring-progress" id="pomodoroRing" cx="100" cy="100" r="85" style="stroke:url(#pomoGradient)"></circle>
+              <text x="100" y="110" text-anchor="middle" class="focus-big-time" id="pomodoroTime">25:00</text>
+            </svg>
+            <div class="focus-controls">
+              <button id="pomodoroReset" data-tooltip="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+              <button class="primary" id="pomodoroToggle" data-tooltip="Start"><i class="fa-solid fa-play"></i></button>
+              <button id="pomodoroSkip" data-tooltip="Skip"><i class="fa-solid fa-forward"></i></button>
+            </div>
+          </div>
+
+          <!-- Stopwatch -->
+          <div class="focus-panel" data-focus-panel="stopwatch">
+            <svg class="focus-display-ring" viewBox="0 0 200 200">
+              <circle class="focus-ring-track" cx="100" cy="100" r="85"></circle>
+              <text x="100" y="110" text-anchor="middle" class="focus-big-time" id="stopwatchTime">00:00</text>
+            </svg>
+            <div class="focus-controls">
+              <button id="stopwatchReset" data-tooltip="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+              <button class="primary" id="stopwatchToggle" data-tooltip="Start"><i class="fa-solid fa-play"></i></button>
+              <button id="stopwatchLap" data-tooltip="Lap"><i class="fa-solid fa-flag"></i></button>
+            </div>
+            <div class="lap-list" id="lapList"></div>
+          </div>
+
+          <!-- Countdown -->
+          <div class="focus-panel" data-focus-panel="countdown">
+            <div class="countdown-input-row">
+              <input type="number" id="countdownMinutes" min="0" max="180" value="10" placeholder="MM">
+              <span style="align-self:center; color:var(--text-faint)">min</span>
+              <input type="number" id="countdownSeconds" min="0" max="59" value="0" placeholder="SS">
+              <span style="align-self:center; color:var(--text-faint)">sec</span>
+            </div>
+            <svg class="focus-display-ring" viewBox="0 0 200 200">
+              <circle class="focus-ring-track" cx="100" cy="100" r="85"></circle>
+              <circle class="focus-ring-progress" id="countdownRing" cx="100" cy="100" r="85" style="stroke:url(#pomoGradient)"></circle>
+              <text x="100" y="110" text-anchor="middle" class="focus-big-time" id="countdownTime">10:00</text>
+            </svg>
+            <div class="focus-controls">
+              <button id="countdownReset" data-tooltip="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+              <button class="primary" id="countdownToggle" data-tooltip="Start"><i class="fa-solid fa-play"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== ANALYTICS ===================== -->
+      <section class="view" data-view="analytics">
+        <div class="view-head"><h2 style="--view-accent:var(--signal)">Analytics</h2></div>
+
+        <div class="analytics-grid">
+          <div class="chart-card full-width" style="--accent-color:var(--signal)">
+            <h3>Productivity Score</h3>
+            <div class="productivity-score-ring">
+              <svg viewBox="0 0 120 120">
+                <defs>
+                  <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#c9a227"/>
+                    <stop offset="100%" stop-color="#1e6f5c"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border-strong)" stroke-width="9"></circle>
+                <circle id="scoreRing" cx="60" cy="60" r="50" fill="none" stroke="url(#scoreGradient)" stroke-width="9" stroke-linecap="round" transform="rotate(-90 60 60)"></circle>
+              </svg>
+              <div class="productivity-score-text">
+                <div class="score-value" id="scoreValue">0</div>
+                <div class="score-label">out of 100 this week</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card" style="--accent-color:var(--amber)">
+            <h3>Tasks Completed Per Week</h3>
+            <canvas id="weeklyCompletionChart"></canvas>
+          </div>
+          <div class="chart-card" style="--accent-color:#2c5f8a">
+            <h3>Tasks By Category</h3>
+            <canvas id="categoryChart"></canvas>
+          </div>
+          <div class="chart-card" style="--accent-color:var(--teal)">
+            <h3>Completion Percentage</h3>
+            <canvas id="completionPieChart"></canvas>
+          </div>
+          <div class="chart-card" style="--accent-color:#7a4b94">
+            <h3>Weekly Activity</h3>
+            <canvas id="weeklyActivityChart"></canvas>
+          </div>
+          <div class="chart-card full-width" style="--accent-color:var(--coral)">
+            <h3>Monthly Productivity</h3>
+            <canvas id="monthlyProductivityChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== PROFILE ===================== -->
+      <section class="view" data-view="profile">
+        <div class="view-head">
+          <h2 style="--view-accent:#2c5f8a">Profile</h2>
+          <div class="view-head-actions">
+            <button class="btn btn-secondary" id="editProfileBtn"><i class="fa-solid fa-pen"></i> Edit profile</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="profile-card">
+            <div class="profile-avatar" id="profileAvatar">--</div>
+            <div class="profile-info">
+              <h2 id="profileFullName">—</h2>
+              <p id="profileUsername">@—</p>
+              <p id="profileEmail">—</p>
+              <p id="profileMemberSince">Member since —</p>
+            </div>
+          </div>
+
+          <div class="profile-stats-row">
+            <div class="profile-mini-stat"><div class="value" id="profileCompletedCount">0</div><div class="label">Completed Tasks</div></div>
+            <div class="profile-mini-stat"><div class="value" id="profilePendingCount">0</div><div class="label">Pending Tasks</div></div>
+            <div class="profile-mini-stat"><div class="value" id="profileFavQuotesCount">0</div><div class="label">Favorite Quotes</div></div>
+            <div class="profile-mini-stat"><div class="value" id="profileFavTasksCount">0</div><div class="label">Favorite Tasks</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SETTINGS ===================== -->
+      <section class="view" data-view="settings">
+        <div class="view-head"><h2 style="--view-accent:var(--text-muted)">Settings</h2></div>
+
+        <div class="panel">
+          <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Dark Mode</div>
+                <div class="settings-row-desc">Switch between light and dark themes.</div>
+              </div>
+              <div class="toggle-switch on" id="themeToggle"></div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Accent Color</div>
+                <div class="settings-row-desc">Pick the highlight color used across the app.</div>
+              </div>
+              <div class="accent-swatch-row" id="accentSwatchRow">
+                <div class="accent-swatch selected" data-accent="signal" style="background:#c9a227" title="Gold"></div>
+                <div class="accent-swatch" data-accent="teal" style="background:#1e6f5c" title="Emerald"></div>
+                <div class="accent-swatch" data-accent="amber" style="background:#a85c32" title="Copper"></div>
+                <div class="accent-swatch" data-accent="coral" style="background:#8c2f39" title="Garnet"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Preferences</h3>
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Time Format</div>
+                <div class="settings-row-desc">Choose 12-hour or 24-hour clock display.</div>
+              </div>
+              <select class="select-control" id="timeFormatSelect">
+                <option value="12h">12-hour</option>
+                <option value="24h">24-hour</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Weather Unit</div>
+                <div class="settings-row-desc">Celsius or Fahrenheit for the weather widget.</div>
+              </div>
+              <select class="select-control" id="weatherUnitSelect">
+                <option value="metric">Celsius (°C)</option>
+                <option value="imperial">Fahrenheit (°F)</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Notifications</div>
+                <div class="settings-row-desc">Show toast notifications for task and account activity.</div>
+              </div>
+              <div class="toggle-switch on" id="notificationsToggle"></div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Task Due Reminders</div>
+                <div class="settings-row-desc">Get an alert — sound, toast, and a desktop notification if enabled — the moment a task's due time arrives.</div>
+              </div>
+              <button class="btn btn-secondary" id="enableDesktopNotifBtn"><i class="fa-solid fa-bell"></i> Enable</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Categories</h3>
+            <div class="filter-chips" id="settingsCategoryList"></div>
+            <div class="category-add-row">
+              <input type="text" class="form-control" id="newCategoryInput" placeholder="Add a custom category" style="padding-left:16px">
+              <button class="btn btn-secondary" id="addCategoryBtn">Add</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================= TASK MODAL ============================= -->
+<div class="modal" id="taskModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="taskModalTitle">New Task</h3>
+      <button class="modal-close" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="taskForm" novalidate>
+      <input type="hidden" id="taskId">
+      <div class="form-group">
+        <label for="taskTitle">Title</label>
+        <input type="text" id="taskTitle" class="form-control" style="padding-left:16px" placeholder="e.g. Finish quarterly report" required>
+      </div>
+      <div class="form-group">
+        <label for="taskDescription">Description</label>
+        <textarea id="taskDescription" class="form-textarea" placeholder="Add more detail (optional)"></textarea>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="taskCategory">Category</label>
+          <select id="taskCategory" class="form-control select-control" style="width:100%"></select>
+        </div>
+        <div class="form-group">
+          <label for="taskPriority">Priority</label>
+          <select id="taskPriority" class="form-control select-control" style="width:100%">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="taskDueDate">Due Date</label>
+          <input type="date" id="taskDueDate" class="form-control" style="padding-left:16px">
+        </div>
+        <div class="form-group">
+          <label for="taskDueTime">Due Time</label>
+          <input type="time" id="taskDueTime" class="form-control" style="padding-left:16px">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="taskSubmitBtn"><i class="fa-solid fa-check"></i> Save Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================= NOTE MODAL ============================= -->
+<div class="modal" id="noteModal">
+  <div class="modal-box modal-sm">
+    <div class="modal-head">
+      <h3 id="noteModalTitle">New Note</h3>
+      <button class="modal-close" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="noteForm" novalidate>
+      <input type="hidden" id="noteId">
+      <div class="form-group">
+        <label for="noteTitle">Title</label>
+        <input type="text" id="noteTitle" class="form-control" style="padding-left:16px" placeholder="Note title" required>
+      </div>
+      <div class="form-group">
+        <label for="noteContent">Content</label>
+        <textarea id="noteContent" class="form-textarea" placeholder="Write something…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Color</label>
+        <div class="color-swatch-row" id="noteColorRow">
+          <div class="color-swatch selected" data-color="#c9a227" style="background:#c9a227"></div>
+          <div class="color-swatch" data-color="#a85c32" style="background:#a85c32"></div>
+          <div class="color-swatch" data-color="#1e6f5c" style="background:#1e6f5c"></div>
+          <div class="color-swatch" data-color="#8c2f39" style="background:#8c2f39"></div>
+          <div class="color-swatch" data-color="#2c5f8a" style="background:#2c5f8a"></div>
+          <div class="color-swatch" data-color="#7a4b94" style="background:#7a4b94"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Note</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================= EDIT PROFILE MODAL ============================= -->
+<div class="modal" id="profileModal">
+  <div class="modal-box modal-sm">
+    <div class="modal-head">
+      <h3>Edit Profile</h3>
+      <button class="modal-close" data-modal-close><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="profileForm" novalidate>
+      <div class="form-group">
+        <label for="editFullName">Full name</label>
+        <input type="text" id="editFullName" class="form-control" style="padding-left:16px">
+      </div>
+      <div class="form-group">
+        <label for="editUsername">Username</label>
+        <input type="text" id="editUsername" class="form-control" style="padding-left:16px">
+      </div>
+      <div class="form-group">
+        <label for="editEmail">Email</label>
+        <input type="email" id="editEmail" class="form-control" style="padding-left:16px">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script type="module" src="assets/js/app.js?v=5"></script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f13;
+      color: #f0f0f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #1a1a24;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+      color: #8888a0;
+      margin-bottom: 2rem;
+    }
+
+    /* ===== FORM FIELD ===== */
+    .field {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #8888a0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      background: #0f0f13;
+      border: 1.5px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #f0f0f5;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      border-color: #c0392b;
+    }
+
+    /* valid state */
+    input.valid {
+      border-color: #27ae60;
+    }
+
+    /* error state */
+    input.error {
+      border-color: #e74c3c;
+    }
+
+    /* ===== PASSWORD WRAPPER ===== */
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 44px; /* space for the eye icon */
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #8888a0;
+      font-size: 1.1rem;
+      padding: 4px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .eye-btn:hover {
+      color: #f0f0f5;
+    }
+
+    /* ===== ERROR MESSAGE ===== */
+    .error-msg {
+      font-size: 0.78rem;
+      color: #e74c3c;
+      margin-top: 5px;
+      display: none; /* hidden by default */
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    /* ===== PASSWORD STRENGTH ===== */
+    .strength-bar-wrapper {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.08);
+      transition: background 0.3s;
+    }
+
+    .strength-label {
+      font-size: 0.75rem;
+      margin-top: 5px;
+      color: #8888a0;
+    }
+
+    /* ===== SUBMIT BTN ===== */
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 0.5rem;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+
+    .submit-btn:hover {
+      background: #e74c3c;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ===== SUCCESS MESSAGE ===== */
+    .success-msg {
+      display: none;
+      background: rgba(39,174,96,0.12);
+      border: 1px solid rgba(39,174,96,0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      color: #27ae60;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+
+    .success-msg.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Create Account</h2>
+  <p class="subtitle">Fill in your details to get started</p>
+
+  <form id="signupForm" novalidate>
+
+    <!-- Full Name -->
+    <div class="field">
+      <label for="fullname">Full Name</label>
+      <input
+        type="text"
+        id="fullname"
+        placeholder="e.g. Chidi Okeke"
+        autocomplete="off"
+      >
+      <div class="error-msg" id="fullnameError">Please enter your full name</div>
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+      <label for="email">Email Address</label>
+      <input
+        type="email"
+        id="email"
+        placeholder="e.g. chidi@gmail.com"
+        autocomplete="off"
+      >
+      <div class="error-msg" id="emailError">Please enter a valid email address</div>
+    </div>
+
+    <!-- Phone -->
+    <div class="field">
+      <label for="phone">Phone Number</label>
+      <input
+        type="tel"
+        id="phone"
+        placeholder="e.g. 08012345678"
+        maxlength="11"
+        autocomplete="off"
+      >
+      <div class="error-msg" id="phoneError">Enter a valid 11-digit Nigerian number</div>
+    </div>
+
+    <!-- Password -->
+    <div class="field">
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input
+          type="password"
+          id="password"
+          placeholder="Minimum 8 characters"
+          autocomplete="off"
+        >
+        <button type="button" class="eye-btn" id="togglePassword">👁</button>
+      </div>
+      <!-- Strength bars -->
+      <div class="strength-bar-wrapper">
+        <div class="strength-bar" id="bar1"></div>
+        <div class="strength-bar" id="bar2"></div>
+        <div class="strength-bar" id="bar3"></div>
+        <div class="strength-bar" id="bar4"></div>
+      </div>
+      <div class="strength-label" id="strengthLabel"></div>
+      <div class="error-msg" id="passwordError">Password must be at least 8 characters</div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="field">
+      <label for="confirmPassword">Confirm Password</label>
+      <div class="password-wrapper">
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="Repeat your password"
+          autocomplete="off"
+        >
+        <button type="button" class="eye-btn" id="toggleConfirm">👁</button>
+      </div>
+      <div class="error-msg" id="confirmError">Passwords do not match</div>
+    </div>
+
+    <button type="submit" class="submit-btn">Create Account</button>
+
+    <div class="success-msg" id="successMsg">
+      ✅ Account created successfully! Welcome aboard.
+    </div>
+
+  </form>
+</div>
+
+<script>
+  // =============================================
+  // HELPER FUNCTIONS
+  // =============================================
+
+  // Show error on a field
+  function showError(inputId, errorId) {
+    let input = document.getElementById(inputId);
+    let error = document.getElementById(errorId);
+    input.classList.remove("valid");
+    input.classList.add("error");
+    error.classList.add("show");
+  }
+
+  // Show success on a field
+  function showSuccess(inputId, errorId) {
+    let input = document.getElementById(inputId);
+    let error = document.getElementById(errorId);
+    input.classList.remove("error");
+    input.classList.add("valid");
+    error.classList.remove("show");
+  }
+
+  // Check if email format is valid
+  function isValidEmail(email) {
+    // must have characters, then @, then characters, then dot, then characters
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // Check if Nigerian phone number is valid
+  function isValidPhone(phone) {
+    // must be exactly 11 digits and start with 0
+    return /^0[789][01]\d{8}$/.test(phone);
+  }
+
+  // =============================================
+  // PASSWORD STRENGTH CHECKER
+  // =============================================
+
+  let passwordInput = document.getElementById("password");
+
+  passwordInput.addEventListener("input", function() {
+    let value = passwordInput.value;
+    let strength = 0;
+
+    if (value.length >= 8) strength++;          // at least 8 characters
+    if (/[A-Z]/.test(value)) strength++;         // has uppercase letter
+    if (/[0-9]/.test(value)) strength++;         // has a number
+    if (/[^A-Za-z0-9]/.test(value)) strength++;  // has special character
+
+    let bars = [
+      document.getElementById("bar1"),
+      document.getElementById("bar2"),
+      document.getElementById("bar3"),
+      document.getElementById("bar4")
+    ];
+
+    let label = document.getElementById("strengthLabel");
+
+    // Reset all bars first
+    bars.forEach(function(bar) {
+      bar.style.background = "rgba(255,255,255,0.08)";
+    });
+
+    // Color bars based on strength score
+    if (strength === 1) {
+      bars[0].style.background = "#e74c3c";
+      label.textContent = "Weak";
+      label.style.color = "#e74c3c";
+    } else if (strength === 2) {
+      bars[0].style.background = "#f39c12";
+      bars[1].style.background = "#f39c12";
+      label.textContent = "Fair";
+      label.style.color = "#f39c12";
+    } else if (strength === 3) {
+      bars[0].style.background = "#27ae60";
+      bars[1].style.background = "#27ae60";
+      bars[2].style.background = "#27ae60";
+      label.textContent = "Good";
+      label.style.color = "#27ae60";
+    } else if (strength === 4) {
+      bars.forEach(function(bar) {
+        bar.style.background = "#27ae60";
+      });
+      label.textContent = "Strong 💪";
+      label.style.color = "#27ae60";
+    } else {
+      label.textContent = "";
+    }
+  });
+
+  // =============================================
+  // EYE TOGGLE — PASSWORD
+  // =============================================
+
+  let togglePassword = document.getElementById("togglePassword");
+
+  togglePassword.addEventListener("click", function() {
+    let isHidden = passwordInput.type === "password";
+
+    // Switch type
+    passwordInput.type = isHidden ? "text" : "password";
+
+    // Switch icon
+    togglePassword.textContent = isHidden ? "🙈" : "👁";
+  });
+
+  // =============================================
+  // EYE TOGGLE — CONFIRM PASSWORD
+  // =============================================
+
+  let confirmInput = document.getElementById("confirmPassword");
+  let toggleConfirm = document.getElementById("toggleConfirm");
+
+  toggleConfirm.addEventListener("click", function() {
+    let isHidden = confirmInput.type === "password";
+    confirmInput.type = isHidden ? "text" : "password";
+    toggleConfirm.textContent = isHidden ? "🙈" : "👁";
+  });
+
+  // =============================================
+  // LIVE VALIDATION — runs as user types
+  // =============================================
+
+  // Full name — validate on input
+  document.getElementById("fullname").addEventListener("input", function() {
+    let value = this.value.trim();
+    if (value.length >= 3) {
+      showSuccess("fullname", "fullnameError");
+    } else {
+      showError("fullname", "fullnameError");
+    }
+  });
+
+  // Email — validate on input
+  document.getElementById("email").addEventListener("input", function() {
+    if (isValidEmail(this.value.trim())) {
+      showSuccess("email", "emailError");
+    } else {
+      showError("email", "emailError");
+    }
+  });
+
+  // Phone — validate on input
+  document.getElementById("phone").addEventListener("input", function() {
+    if (isValidPhone(this.value.trim())) {
+      showSuccess("phone", "phoneError");
+    } else {
+      showError("phone", "phoneError");
+    }
+  });
+
+  // Password — validate on input
+  passwordInput.addEventListener("input", function() {
+    if (this.value.length >= 8) {
+      showSuccess("password", "passwordError");
+    } else {
+      showError("password", "passwordError");
+    }
+  });
+
+  // Confirm password — validate on input
+  confirmInput.addEventListener("input", function() {
+    if (this.value === passwordInput.value && this.value !== "") {
+      showSuccess("confirmPassword", "confirmError");
+    } else {
+      showError("confirmPassword", "confirmError");
+    }
+  });
+
+  // =============================================
+  // FORM SUBMIT — final check
+  // =============================================
+
+  let form = document.getElementById("signupForm");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // stop page reload
+
+    let fullname = document.getElementById("fullname").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let password = passwordInput.value;
+    let confirmPassword = confirmInput.value;
+
+    let isValid = true;
+
+    // Check full name
+    if (fullname.length < 3) {
+      showError("fullname", "fullnameError");
+      isValid = false;
+    }
+
+    // Check email
+    if (!isValidEmail(email)) {
+      showError("email", "emailError");
+      isValid = false;
+    }
+
+    // Check phone
+    if (!isValidPhone(phone)) {
+      showError("phone", "phoneError");
+      isValid = false;
+    }
+
+    // Check password length
+    if (password.length < 8) {
+      showError("password", "passwordError");
+      isValid = false;
+    }
+
+    // Check passwords match
+    if (confirmPassword !== password || confirmPassword === "") {
+      showError("confirmPassword", "confirmError");
+      isValid = false;
+    }
+
+    // If everything passed
+    if (isValid) {
+      document.getElementById("successMsg").classList.add("show");
+      form.reset();
+
+      // Reset all field states after success
+      let inputs = form.querySelectorAll("input");
+      inputs.forEach(function(input) {
+        input.classList.remove("valid", "error");
+      });
+
+      // Reset strength bars
+      let bars = document.querySelectorAll(".strength-bar");
+      bars.forEach(function(bar) {
+        bar.style.background = "rgba(255,255,255,0.08)";
+      });
+      document.getElementById("strengthLabel").textContent = "";
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile Card</title>
+<style>
+  :root {
+    --card-bg: #ffffff;
+    --page-bg: #f1f5f9;
+    --text: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #6366f1;
+    --accent-2: #a855f7;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .06),
+              0 12px 32px -12px rgba(15, 23, 42, .18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --card-bg: #12161f;
+      --page-bg: #080a0f;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --line: #232a36;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .5),
+                0 18px 40px -16px rgba(0, 0, 0, .8);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem 1rem;
+    background:
+      radial-gradient(60% 60% at 50% 0%, rgba(99, 102, 241, .12), transparent 70%),
+      var(--page-bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Card ---------- */
+  .card {
+    width: min(360px, 100%);
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform .3s cubic-bezier(.22, 1, .36, 1),
+                box-shadow .3s ease;
+    animation: rise .5s cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 2px 4px rgba(15, 23, 42, .06),
+                0 24px 48px -16px rgba(15, 23, 42, .25);
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Cover ---------- */
+  .cover {
+    height: 108px;
+    position: relative;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 52%, #ec4899 100%);
+  }
+
+  .cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120px 120px at 18% 120%, rgba(255, 255, 255, .35), transparent 70%),
+      radial-gradient(90px 90px at 88% -20%, rgba(255, 255, 255, .28), transparent 70%);
+  }
+
+  /* ---------- Body ---------- */
+  .body { padding: 0 22px 22px; }
+
+  .avatar-wrap {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    margin-top: -46px;
+  }
+
+  .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: #fff;
+    background: linear-gradient(140deg, #4f46e5, #9333ea 60%, #db2777);
+    border: 4px solid var(--card-bg);
+    box-shadow: 0 6px 18px -6px rgba(79, 70, 229, .7);
+    user-select: none;
+  }
+
+  .status {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 3px solid var(--card-bg);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 14px 0 2px;
+  }
+
+  .name {
+    margin: 0;
+    font-size: 1.22rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+  }
+
+  .verified {
+    width: 18px;
+    height: 18px;
+    color: #1d9bf0;
+    flex: none;
+  }
+
+  .handle {
+    margin: 0;
+    font-size: .9rem;
+    color: var(--muted);
+  }
+
+  .bio {
+    margin: 12px 0 0;
+    font-size: .9rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    margin: 12px 0 0;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+
+  .meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .meta svg { width: 14px; height: 14px; opacity: .75; }
+
+  /* ---------- Stats ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stats li {
+    text-align: center;
+    border-left: 1px solid var(--line);
+  }
+
+  .stats li:first-child { border-left: 0; }
+
+  .stats b {
+    display: block;
+    font-size: .98rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stats small {
+    font-size: .74rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* ---------- Actions ---------- */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .72rem 1rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .2s ease,
+                background .2s ease, color .2s ease, border-color .2s ease;
+  }
+
+  .btn:active { transform: scale(.97); }
+
+  .btn:focus-visible {
+    outline: 3px solid rgba(99, 102, 241, .45);
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 10px 22px -10px rgba(99, 102, 241, .9);
+  }
+
+  .btn-primary:hover { filter: brightness(1.06); }
+
+  .btn-primary.is-following {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--line);
+    box-shadow: none;
+  }
+
+  .btn-primary.is-following:hover {
+    border-color: #f87171;
+    color: #ef4444;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--line);
+  }
+
+  .btn-ghost:hover { background: rgba(99, 102, 241, .08); border-color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      transition-duration: .001ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <article class="card" aria-labelledby="profile-name">
+    <div class="cover"></div>
+
+    <div class="body">
+      <div class="avatar-wrap">
+        <div class="avatar" aria-hidden="true">AL</div>
+        <span class="status" title="Online" aria-label="Online"></span>
+      </div>
+
+      <div class="identity">
+        <h1 class="name" id="profile-name">Ada Lovelace</h1>
+        <svg class="verified" viewBox="0 0 24 24" role="img" aria-label="Verified account">
+          <path fill="currentColor" d="M12 1.6l2.5 2.2 3.3-.6.9 3.2 2.9 1.6-1.3 3.1 1.3 3.1-2.9 1.6-.9 3.2-3.3-.6L12 22.4l-2.5-2.2-3.3.6-.9-3.2-2.9-1.6L3.7 12 2.4 8.9l2.9-1.6.9-3.2 3.3.6L12 1.6z"/>
+          <path fill="#fff" d="M10.8 15.3l-2.9-2.9 1.3-1.3 1.6 1.6 4-4 1.3 1.3-5.3 5.3z"/>
+        </svg>
+      </div>
+
+      <p class="handle">@ada</p>
+
+      <p class="bio">
+        Mathematician &amp; first programmer. Writing about algorithms,
+        analytical engines, and the poetry of computation.
+      </p>
+
+      <p class="meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          London, UK
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="17" rx="3"/>
+            <path d="M8 2v4M16 2v4M3 10h18"/>
+          </svg>
+          Joined March 1843
+        </span>
+      </p>
+
+      <ul class="stats">
+        <li><b>248</b><small>Posts</small></li>
+        <li><b id="followers">12.8k</b><small>Followers</small></li>
+        <li><b>312</b><small>Following</small></li>
+      </ul>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="follow" aria-pressed="false">Follow</button>
+        <button class="btn btn-ghost" type="button">Message</button>
+      </div>
+    </div>
+  </article>
+
+<script>
+  const followBtn = document.getElementById('follow');
+  const followersEl = document.getElementById('followers');
+  const BASE = 12840;
+  let followers = BASE;
+
+  const format = n => n >= 1000
+    ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
+    : String(n);
+
+  followBtn.addEventListener('click', () => {
+    const following = followBtn.getAttribute('aria-pressed') === 'true';
+    followBtn.setAttribute('aria-pressed', String(!following));
+    followBtn.textContent = following ? 'Follow' : 'Following';
+    followBtn.classList.toggle('is-following', !following);
+    followers += following ? -1 : 1;
+    followersEl.textContent = format(followers);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // For....in loop
+
+            const customerAccount = {
+            name: "Alex Black",
+            accountNumber: "9157008457",
+            accountType: "savings",
+            balance: "$20,000,000.00",
+            bvn: "12345678901"
+        };
+
+        for (let key in customerAccount) {
+            if (key === "bvn") continue;
+            console.log(key + ": " + customerAccount[key]);
+        }
+
+        // For loop
+        const suyaPrices = [1200, 950, 1500, 800, 1100];
+
+let lowestPrice = suyaPrices[0];
+let lowestIndex = 0;
+
+for (let i = 0; i < suyaPrices.length; i++) {
+    if (suyaPrices[i] < lowestPrice) {
+        lowestPrice = suyaPrices[i];
+        lowestIndex = i;
+    }
+}
+
+// Convert index to position (1st, 2nd, etc.)
+const position = lowestIndex + 1;
+let ordinal;
+if (position === 1) ordinal = "1st";
+else if (position === 2) ordinal = "2nd";
+else if (position === 3) ordinal = "3rd";
+else ordinal = `${position}th`;
+
+console.log(`The cheapest suya is ₦${lowestPrice} from mallam number ${ordinal} in the array.`);
+const states = ["Lagos", "Abuja", "Kano", "Enugu", "Rivers", "Oyo"];
+const geopoliticalZones = {
+            "Lagos": "South-West",
+            "Abuja": "North-Central",
+            "Kano": "North-West",
+            "Enugu": "South-East",
+            "Rivers": "South-South",
+            "Oyo": "South-West"
+        };
+
+        for (const state of states) {
+            if (state === "Enugu") {
+                console.log(state + " : " + geopoliticalZones[state]);
+                break;
+            }
+            console.log(state + " : " +geopoliticalZones[state]);
+
+        }
+
+        // Given global variable (do not change)
+let accountBalance = 20000;
+
+// Question 1: Basic Withdrawal
+function checkAccount(pin, withdrawalAmount, callback) {
+    console.log("Card inserted...");
+    console.log("Processing... please wait");
+
+    if (pin !== 1234) {
+        callback("error", "Incorrect PIN. Transaction declined.");
+        return;
+    }
+
+    if (withdrawalAmount <= accountBalance) {
+        callback("success", withdrawalAmount);
+    } else {
+        callback("failure", "Insufficient funds. Transaction declined.");
+    }
+}
+
+// Question 2: Handle the Result
+function transactionResult(status, data) {
+    if (status === "success") {
+        console.log(`Withdrawal complete! You withdrew: ₦${data}`);
+    } else if (status === "failure" || status === "error") {
+        console.log(data);
+    }
+}
+
+// Question 3: Test Your POS Machine
+checkAccount(1234, 5000, transactionResult);   // Should succeed
+checkAccount(1234, 50000, transactionResult);  // Should fail
+checkAccount(9999, 5000, transactionResult);   // Should decline (error)
+    </script>
+    <script src="js/javascript.js"></script>
+</body>
+</html>

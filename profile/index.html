@@ -1,0 +1,28 @@
+<!-- ========== index.html ========== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile Cards — JSONPlaceholder Users</title>
+
+  <!-- LINK TO CSS -->
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>User Profiles</h1>
+    <p>Fetched live from jsonplaceholder.typicode.com/users</p>
+  </header>
+
+  <!-- Loading / error message -->
+  <p class="status" id="status" role="status">Loading profiles…</p>
+
+  <!-- Cards get injected here by JavaScript -->
+  <main class="profiles" id="profiles"></main>
+
+  <!-- LINK TO JAVASCRIPT -->
+  <script src="index.js"></script>
+</body>
+</html>

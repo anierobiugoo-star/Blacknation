@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=sc, initial-scale=1.0"> -->
+    <title>functions In JavaScript</title>
+</head>
+<body>
+    <script>
+     //function is a block of code that performs a specific task. It is reusable and can be called multiple times in a program. Functions can take parameters and return values. The syntax for defining a function in JavaScript is as follows:
+//block of code is enclosed in curly braces {} and the function is called by its name followed by parentheses ().
+
+function greet(name) {
+  console.log("Hello, " + name + "!");
+}
+
+greet("Chinelo"); // Output: Hello, Chinelo!
+greet("Sandra"); // Output: Hello, Sandra!
+greet("John"); // Output: Hello, John!
+
+//anonymous function is a function that does not have a name.
+// It is often used as a callback function or assigned to a variable. The syntax for an anonymous function in JavaScript
+//  is as follows:
+//let is used to assign the anonymous function to a variable, and the function itself is defined without a name.
+//const is used to assign the anonymous function to a variable, and the function itself is defined without a name.
+// This means that the function cannot be reassigned or redeclared, and it will always refer to the same function.
+
+const greet2 = function (name) {
+  console.log("Hello, " + name + "!");
+};
+
+greet2("Chinelo"); // Output: Hello, Chinelo!
+
+//arrow function is a concise way to write functions in JavaScript. It uses the => syntax
+//  and does not have its own this context. The syntax for an arrow function is as follows:
+
+function add(a, b) {
+  return a + b;
+}
+
+add(5, 3); // Output: 8
+const sum = add(5, 3);
+console.log(sum); // Output: 8
+
+// arrow functions in javascript
+//this is a shorter syntax for writing function
+
+const sum1 = (a, b) => {
+  return a + b;
+};
+
+console.log(sum1(5, 6)); // Output: 11
+
+//ternary operator is a shorthand way of writing an if-else statement.
+// It takes three operands: a condition, an expression to execute if the condition is true,
+// and an expression to execute if the condition is false. The syntax for the ternary operator is as follows:
+
+//default parameters are a way to set default values for function parameters in case they 
+// are not provided when the function is called. The syntax for default parameters in JavaScript is as follows:
+
+function greet3(name = "Guest") {
+  console.log("Hello, " + name + "!");
+}
+
+greet3(); // Output: Hello, Guest!
+greet3("Chinelo"); // Output: Hello, Chinelo!
+
+//higher-order functions are functions that can take other functions as arguments or return
+//  functions as their result. They are a powerful feature of JavaScript and are commonly used in functional programming. 
+// The syntax for higher-order functions in JavaScript is as follows:
+
+function greet4(name){
+    name();
+}
+
+function sayHello(user){
+    console.log("Hello, " + user + "! Welcome to JavaScript.");
+}
+
+greet4(() => sayHello("Chinelo")); // Output: Hello, Chinelo! Welcome to JavaScript.
+
+//callback functions are functions that are passed as arguments to other functions and are executed 
+// after a certain event or condition is met. They are commonly used in asynchronous programming and event handling. 
+// The syntax for callback functions in JavaScript is as follows:
+
+function processOrder(order, callback) {
+    console.log("Processing order: " + order);
+    callback();
+}
+
+function orderComplete() {
+    console.log("Order complete!");
+}
+
+processOrder("Pizza", orderComplete); // Output: Processing order: Pizza
+// Order complete!
+
+//example22 : using callback with parameters with setTimeout
+
+console.log("Data is being accessed")
+
+setTimeout(() => {
+    console.assert("Data has been accessed");
+},6000)
+
+console.log("Other operations are being performed while waiting for data access");
+
+//output:
+//Data is being accessed
+//Other operations are being performed while waiting for data access
+//Data has been accessed (after 3 seconds)
+
+//scope in javascript
+//scope refers to the accessibility of variables and functions in different parts of a program.
+// There are three types of scope in JavaScript: global scope, local scope, and block scope.
+
+//global scope refers to variables and functions that are accessible throughout the entire program.
+// Local scope refers to variables and functions that are accessible only within a specific function or block of code.
+// Block scope refers to variables and functions that are accessible only within a specific block of code, such as an if statement or a loop. 
+
+//global scope example
+let globalVariable = "I am a global variable";
+
+function myFunction() {
+  //local scope
+  let localVariable = "I am a local variable";
+  console.log(globalVariable); // Output: I am a global variable
+  //console.log(localVariable); // Output: I am a local variable
+} 
+
+myFunction();
+
+console.log(globalVariable); // Output: I am a global variable
+// console.log(localVariable); // Error: localVariable is not defined
+
+
+//block scope example
+if (true) {
+  let blockVariable = "I am a block variable";
+  console.log(blockVariable); // Output: I am a block variable
+}
+
+//console.log(blockVariable); // Error: blockVariable is not defined
+
+//Nested functions and closures in JavaScript
+//Nested functions are functions that are defined inside another function. They have access to the variables and parameters of the outer function. 
+//Closures are a powerful feature of JavaScript that allows a nested function to access and manipulate the variables of its outer function even after the outer function has finished executing.  
+// this is an example of nested functions and closures in JavaScript
+
+function outerFunction() {
+  let outerVariable = "I am an outer variable";
+ 
+
+  function innerFunction() {
+    let innerVariable = "I am an inner variable";
+    console.log(outerVariable); // Output: I am an outer variable
+    console.log(innerVariable); // output: I am an inner variable
+  }
+
+  //  innerFunction;
+  //  console.log("innervariable"); // error: innervariable is not defined
+}
+
+//const myinnerFunction = outerFunction();// Output: I am an outer variable
+//myinnerFunction(); // Output: I am an outer variable
+
+//what is closure in JavaScript?
+//A closure is a function that has access to its own scope, the outer function's scope, and the global scope. 
+// It allows a function to access and manipulate variables from an outer function even after the outer function has finished executing. 
+// Closures are created whenever a function is defined inside another function and the inner function references variables from the outer function.
+
+function makeCounter() {
+  let count = 0;//this variable is enclosed by the inner function
+
+  function increment() {
+    count++;
+    console.log(count);
+  }
+
+  return increment; // return the inner function
+
+}
+
+const counter = makeCounter(); // counter is a closure that has access to the count variable
+counter(); // Output: 1
+counter(); // Output: 2
+counter(); // Output: 3
+
+//another example of closure of adding a money to an account
+
+function createAccount(initialBalance) {
+  let balance = initialBalance; // this variable is enclosed by the inner function
+  
+  function deposit(amount) {
+    balance += amount;
+    console.log("Balance: $" + balance);
+  }
+
+  return deposit; // return the inner function
+}
+
+const account = createAccount(5000); // account is a closure that has access to the balance variable
+account(2000); // Output: Balance: $7000
+account(3000); // Output: Balance: $10000
+
+//Arrays in JavaScript
+//An array is a data structure that can hold multiple values of different types. 
+// It is a special type of object that has properties and methods for manipulating the data it contains. 
+// The syntax for creating an array in JavaScript is as follows:
+
+const fruits = ["Apple", "Banana", "Orange"];
+console.log(fruits[0]); // Output: Apple
+
+//check for the length of the array we make use of the length property of the array
+console.log(fruits.length); // Output: 3
+
+//looping through an array
+for (let i = 0; i < fruits.length; i++) {
+  console.log(fruits[i]);
+} 
+
+//you can also use the for...of loop to loop through an array
+
+const colors = ["Red", "Green", "Blue"];
+
+for (let color of colors) {
+  console.log(color);
+}
+
+
+//changing an array item
+fruits[1] = "Mango"; // changes the second item in the array to "Mango"
+console.log(fruits); // Output: ["Apple", "Mango", "Orange"]
+
+
+
+//ForEach method to loop through an array
+//The foreach method executes a provided function once for each array element.
+//Just like assigning a function  that loops through ther array and logs each element to the console
+//The for..of is like looping through the array and logging each element to the console
+
+//array is an object that has a method called forEach that takes a callback function as
+//  an argument and executes it for each element in the array.
+
+// arrays pop method is used to remove the last element from an array,
+//  arrays shift method is used to remove the first element from an array,
+//  arrays unshift method is used to add an element to the beginning of an array.
+
+const sports = ["Football", "Basketball", "highJump", "carRacing"];
+
+sports.forEach(function (sport) {
+  console.log(sport);
+});
+
+//when using a for...of to through the same array
+
+for (let sport of sports){
+  console.log(sport)
+}
+
+  
+
+
+//arrays push,pop,shift and unshift methods
+fruits.push("pinapple"); // adds Grapes to the end of the array
+console.log(fruits); // Output: ["Apple", "Banana", "grape", "Grapes"]
+fruits.pop(); // removes the last element from the array
+console.log(fruits); // Output: ["Apple", "Banana", "Orange"]
+fruits.unshift("Mango"); // adds Mango to the beginning of the array
+console.log(fruits); // Output: ["Mango", "Apple", "Banana", "Orange"]
+fruits.shift(); // removes the first element from the array
+console.log(fruits); // Output: ["Apple", "Banana", "Orange"] 
+
+//array methods in javascript
+    </script>
+</body>
+</html>

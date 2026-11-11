@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cybersecurity Capstone · Apex Healthcare</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* ----- RESET & BASE ----- */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0b0e17;
+            --bg-card: #121a2a;
+            --bg-card-hover: #1a253b;
+            --border-glow: #1e3a5f;
+            --text-primary: #e8edf5;
+            --text-secondary: #94a9c9;
+            --text-muted: #5e7499;
+            --accent-cyan: #00d4ff;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --accent-green: #10b981;
+            --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.06);
+            --radius: 16px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ----- HEADER / HERO ----- */
+        .hero {
+            background: linear-gradient(145deg, rgba(18, 26, 42, 0.9), rgba(11, 14, 23, 0.95));
+            border: 1px solid rgba(0, 212, 255, 0.12);
+            border-radius: var(--radius);
+            padding: 2.5rem 2.8rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -10%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 100px;
+            padding: 0.3rem 1rem 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-badge i {
+            font-size: 0.6rem;
+            color: var(--accent-cyan);
+        }
+
+        .hero-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title-group {
+            flex: 1 1 500px;
+        }
+
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.4rem;
+        }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+        }
+
+        .hero-deadline {
+            flex-shrink: 0;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 100px;
+            padding: 0.6rem 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--accent-red);
+            white-space: nowrap;
+        }
+
+        .hero-deadline i {
+            font-size: 1rem;
+        }
+
+        .hero-deadline span {
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        /* ----- QUOTE / MANTRA ----- */
+        .mantra {
+            background: rgba(139, 92, 246, 0.06);
+            border-left: 3px solid var(--accent-purple);
+            border-radius: 8px;
+            padding: 1.2rem 2rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .mantra i {
+            color: var(--accent-purple);
+            font-size: 1.3rem;
+            margin-top: 0.15rem;
+        }
+
+        .mantra p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .mantra strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ----- SECTION TITLES ----- */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--accent-cyan);
+            font-size: 1.3rem;
+            width: 2rem;
+            text-align: center;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+            font-size: 0.98rem;
+        }
+
+        /* ----- CARDS GRID ----- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius);
+            padding: 1.8rem 1.8rem 2rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(0, 212, 255, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.02);
+        }
+
+        .card-glow {
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            opacity: 0.03;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-glow {
+            opacity: 0.08;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            display: inline-block;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
+        }
+
+        .card .badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.15rem 0.7rem;
+            border-radius: 100px;
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.08);
+            margin-bottom: 0.8rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-top: 0.8rem;
+        }
+
+        .card ul li {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        .card ul li i {
+            color: var(--accent-cyan);
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+            width: 1rem;
+            text-align: center;
+        }
+
+        /* system cards special */
+        .card-system {
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .card-system .card-icon {
+            color: var(--accent-cyan);
+        }
+
+        /* ----- RISK GRID (4 columns) ----- */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .risk-item {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            transition: var(--transition);
+            cursor: default;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .risk-item:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(0, 212, 255, 0.08);
+            transform: scale(1.02);
+        }
+
+        .risk-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .risk-icon.red {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--accent-red);
+        }
+        .risk-icon.amber {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--accent-amber);
+        }
+        .risk-icon.blue {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--accent-blue);
+        }
+        .risk-icon.purple {
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--accent-purple);
+        }
+
+        .risk-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.05rem;
+        }
+
+        .risk-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* ----- CONTROLS SECTION (expandable) ----- */
+        .controls-section {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius);
+            padding: 2rem 2.2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .controls-header .section-title {
+            margin-bottom: 0;
+        }
+
+        .controls-toggle {
+            background: rgba(0, 212, 255, 0.06);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 100px;
+            padding: 0.4rem 1.2rem;
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .controls-toggle:hover {
+            background: rgba(0, 212, 255, 0.12);
+        }
+
+        .controls-toggle i {
+            transition: var(--transition);
+        }
+
+        .controls-toggle.active i {
+            transform: rotate(180deg);
+        }
+
+        .controls-body {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s ease,
+                margin 0.4s ease;
+            margin-top: 0;
+        }
+
+        .controls-body.open {
+            max-height: 2000px;
+            opacity: 1;
+            margin-top: 1.8rem;
+        }
+
+        .controls-body-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .control-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            transition: var(--transition);
+        }
+
+        .control-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .control-card h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-card h4 i {
+            color: var(--accent-green);
+            font-size: 0.8rem;
+        }
+
+        .control-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ----- FOOTER ----- */
+        .footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 2rem;
+            margin-top: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .footer i {
+            color: var(--accent-red);
+            font-size: 0.7rem;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.8rem;
+            }
+
+            .hero {
+                padding: 1.8rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 1.7rem;
+            }
+
+            .hero-grid {
+                flex-direction: column;
+            }
+
+            .hero-deadline {
+                white-space: normal;
+                align-self: flex-start;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .controls-section {
+                padding: 1.5rem;
+            }
+
+            .controls-body-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .mantra {
+                padding: 1rem 1.2rem;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .risk-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* small animations */
+        .fade-in {
+            animation: fadeUp 0.6s ease both;
+        }
+
+        .fade-in:nth-child(2) {
+            animation-delay: 0.08s;
+        }
+        .fade-in:nth-child(3) {
+            animation-delay: 0.16s;
+        }
+        .fade-in:nth-child(4) {
+            animation-delay: 0.24s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HERO ===== -->
+        <header class="hero">
+            <div class="hero-badge">
+                <i class="fas fa-shield-halved"></i>
+                Capstone · July 18th
+            </div>
+            <div class="hero-grid">
+                <div class="hero-title-group">
+                    <h1 class="hero-title">
+                        From Vulnerability to Compliance
+                    </h1>
+                    <p class="hero-sub">
+                        Securing Legacy Systems at Apex Healthcare Solutions
+                    </p>
+                </div>
+                <div class="hero-deadline">
+                    <i class="fas fa-calendar-circle-exclamation"></i>
+                    Deadline <span>· July 18th</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== MANTRA ===== -->
+        <div class="mantra fade-in">
+            <i class="fas fa-brain"></i>
+            <p>
+                <strong>Think like a cybersecurity professional</strong> — not just an attacker.
+                The goal is not exploitation, but understanding:
+                <em>“What vulnerability exists, why it matters, and what should be done to reduce the risk.”</em>
+            </p>
+        </div>
+
+        <!-- ===== BACKGROUND ===== -->
+        <section style="margin-bottom: 2rem;">
+            <h2 class="section-title fade-in">
+                <i class="fas fa-building"></i> Background
+            </h2>
+            <p class="section-desc fade-in">
+                <strong>Apex Healthcare Solutions</strong> is a medium-sized healthcare technology company
+                providing digital patient record services to clinics and hospitals.
+                Your cybersecurity consulting team has been hired to perform a security review of
+                <strong>two legacy systems</strong> discovered inside their environment.
+            </p>
+        </section>
+
+        <!-- ===== SYSTEMS ===== -->
+        <div class="card-grid">
+            <!-- Kiopatrix -->
+            <div class="card card-system fade-in">
+                <div class="card-glow" style="background: radial-gradient(circle, rgba(0,212,255,0.08), transparent);"></div>
+                <div class="card-icon"><i class="fas fa-server"></i></div>
+                <span class="badge"><i class="fas fa-triangle-exclamation"></i> Legacy System</span>
+                <h3>Kiopatrix</h3>
+                <p>
+                    Outdated medical data gateway running unpatched firmware.
+                    Vulnerable to remote code execution and credential leakage.
+                </p>
+                <ul>
+                    <li><i class="fas fa-circle"></i> Unpatched CVE-2021–44228 (Log4Shell)</li>
+                    <li><i class="fas fa-circle"></i> Default admin credentials active</li>
+                    <li><i class="fas fa-circle"></i> Exposed management interface</li>
+                </ul>
+            </div>
+
+            <!-- Metasploitable 2 -->
+            <div class="card card-system fade-in">
+                <div class="card-glow" style="background: radial-gradient(circle, rgba(139,92,246,0.08), transparent);"></div>
+                <div class="card-icon"><i class="fas fa-skull"></i></div>
+                <span class="badge" style="color:var(--accent-purple); border-color:rgba(139,92,246,0.15); background:rgba(139,92,246,0.08);"><i class="fas fa-biohazard"></i> High Risk</span>
+                <h3>Metasploitable 2</h3>
+                <p>
+                    Intentionally vulnerable Linux VM used internally for testing —
+                    accidentally left connected to production network.
+                </p>
+                <ul>
+                    <li><i class="fas fa-circle"></i> 20+ known exploitable services</li>
+                    <li><i class="fas fa-circle"></i> Weak SSH / Telnet configurations</li>
+                    <li><i class="fas fa-circle"></i> Unrestricted outbound network access</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===== MANAGEMENT CONCERNS ===== -->
+        <section style="margin-bottom: 1.8rem;">
+            <h2 class="section-title fade-in">
+                <i class="fas fa-chart-simple"></i> Business Risks
+            </h2>
+            <p class="section-desc fade-in">
+                Management is concerned these vulnerabilities could lead to:
+            </p>
+
+            <div class="risk-grid">
+                <div class="risk-item fade-in">
+                    <div class="risk-icon red"><i class="fas fa-user-lock"></i></div>
+                    <div class="risk-content">
+                        <h4>Unauthorized Access</h4>
+                        <p>Attackers could gain privileged access to patient records.</p>
+                    </div>
+                </div>
+                <div class="risk-item fade-in">
+                    <div class="risk-icon amber"><i class="fas fa-database"></i></div>
+                    <div class="risk-content">
+                        <h4>Data Breach</h4>
+                        <p>Exfiltration of PHI / PII leads to regulatory fines.</p>
+                    </div>
+                </div>
+                <div class="risk-item fade-in">
+                    <div class="risk-icon blue"><i class="fas fa-clock"></i></div>
+                    <div class="risk-content">
+                        <h4>Service Disruption</h4>
+                        <p>Ransomware or DDoS could halt clinical operations.</p>
+                    </div>
+                </div>
+                <div class="risk-item fade-in">
+                    <div class="risk-icon purple"><i class="fas fa-scale-balanced"></i></div>
+                    <div class="risk-content">
+                        <h4>Compliance Violations</h4>
+                        <p>HIPAA / HITECH non-compliance with severe penalties.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTROLS (Expandable) ===== -->
+        <div class="controls-section fade-in">
+            <div class="controls-header" id="controlsToggle" role="button" tabindex="0" aria-expanded="false">
+                <h2 class="section-title" style="margin-bottom:0;">
+                    <i class="fas fa-shield-check"></i> Security Controls &amp; Policies
+                </h2>
+                <div class="controls-toggle" id="toggleLabel">
+                    <span>Show Controls</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="controls-body" id="controlsBody">
+                <div class="controls-body-inner">
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Patch Management</h4>
+                        <p>Establish a monthly patch cycle for all legacy systems. Prioritize CVSS 7+ vulnerabilities. Use virtual patching where vendor support is unavailable.</p>
+                    </div>
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Network Segmentation</h4>
+                        <p>Isolate Kiopatrix and Metasploitable 2 into a dedicated management VLAN with strict firewall rules. Zero-trust access only from authorized jump hosts.</p>
+                    </div>
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Credential Hardening</h4>
+                        <p>Remove default credentials. Enforce MFA for all administrative access. Implement a password manager with 16+ character complex passwords.</p>
+                    </div>
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Logging &amp; Monitoring</h4>
+                        <p>Deploy SIEM agents to forward logs to a central repository. Create alerts for failed logins, privilege escalation, and outbound connections to suspicious IPs.</p>
+                    </div>
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Vulnerability Scanning</h4>
+                        <p>Run weekly authenticated scans using Nessus or OpenVAS. Generate executive reports with risk scores and remediation timelines.</p>
+                    </div>
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Incident Response Plan</h4>
+                        <p>Develop an IR playbook specific to legacy system compromise. Include containment, eradication, and recovery procedures with tabletop exercises.</p>
+                    </div>
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Compliance Audits</h4>
+                        <p>Conduct quarterly HIPAA security risk assessments. Document all controls and remediation efforts for audit trails.</p>
+                    </div>
+                    <div class="control-card">
+                        <h4><i class="fas fa-check-circle"></i> Staff Awareness</h4>
+                        <p>Train IT staff on secure configuration of legacy systems. Emphasize the "least privilege" principle and secure coding practices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <p>
+                <i class="fas fa-shield-halved"></i>
+                &nbsp;Cybersecurity Capstone · Apex Healthcare Solutions &nbsp;·&nbsp;
+                <i class="fas fa-flag"></i> Deadline July 18th
+            </p>
+            <p style="margin-top:0.4rem; font-size:0.7rem; opacity:0.5;">
+                <i class="fas fa-lock"></i> From Vulnerability to Compliance
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            const toggleBtn = document.getElementById('controlsToggle');
+            const body = document.getElementById('controlsBody');
+            const label = document.getElementById('toggleLabel');
+
+            let isOpen = false;
+
+            function updateToggle() {
+                const isNowOpen = body.classList.contains('open');
+                label.querySelector('span').textContent = isNowOpen ? 'Hide Controls' : 'Show Controls';
+                label.classList.toggle('active', isNowOpen);
+                toggleBtn.setAttribute('aria-expanded', isNowOpen);
+            }
+
+            function toggleControls() {
+                body.classList.toggle('open');
+                updateToggle();
+            }
+
+            // Click handler
+            toggleBtn.addEventListener('click', toggleControls);
+
+            // Keyboard support (Enter / Space)
+            toggleBtn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleControls();
+                }
+            });
+
+            // Initially closed — ensure label matches
+            updateToggle();
+
+            // Optional: auto-open after a short delay to show interactivity?
+            // We'll keep it closed by default; user can open.
+
+            // Extra: Add a small counter / interaction log (optional)
+            console.log('🔐 Cybersecurity Capstone ready.');
+        })();
+    </script>
+
+</body>
+</html>
